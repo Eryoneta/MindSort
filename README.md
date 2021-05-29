@@ -17,4 +17,4 @@ And you can create `Nodules` within `Connections`to change it's path.
 ![Objects](readme/Objetos.png)
 
 ## Instalation
-It can be simply loaded and you can already start using it.
+Provided you have Java Runtime Environment (JRE) installed, it can be simply loaded and will be ready to use.
