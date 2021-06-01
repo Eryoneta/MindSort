@@ -72,7 +72,7 @@ import element.tree.objeto.Objeto;
 import element.tree.objeto.conexao.Conexao;
 import element.tree.objeto.modulo.Modulo;
 import element.tree.Actions;
-import element.tree.Cor;
+import element.tree.propriedades.Cor;
 import element.tree.ObjetoFocusListener;
 import element.tree.Tree;
 @SuppressWarnings({"serial","unchecked"})

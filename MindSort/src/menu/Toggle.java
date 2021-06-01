@@ -1,14 +1,12 @@
 package menu;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-
-import element.tree.Cor;
+import element.tree.propriedades.Cor;
 @SuppressWarnings("serial")
 public class Toggle extends JMenuItem{
 //COR
