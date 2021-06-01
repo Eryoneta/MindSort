@@ -24,6 +24,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import main.MindSort;
 import element.tree.objeto.Objeto;
 import element.tree.Tree;
 @SuppressWarnings("serial")
@@ -35,12 +36,16 @@ public class Searcher{
 	private JLabel resultado;
 	private JButton procurar;
 	private JButton destacar;
+	private final String procurarTxt=MindSort.getLang().get("M_Menu_P_P","Find");
+	private final String listarTxt=MindSort.getLang().get("M_Menu_P_L","List");
+	private final String proximoTxt=MindSort.getLang().get("M_Menu_P_L_P","Next");
+	private final String anteriorTxt=MindSort.getLang().get("M_Menu_P_L_A","Previous");
 //MAIN
 	public Searcher(Tree tree){
 		this.tree=tree;
 		matches=new MatchMade(tree);
 		dialog=new JDialog(tree.getPainel().getJanela()){{
-			setTitle("Procurar");
+			setTitle(MindSort.getLang().get("M_Menu_P_Ti","Find"));
 			setSize(300,350);
 			setMinimumSize(getSize());
 			setLocationRelativeTo(tree.getPainel().getJanela());
@@ -52,50 +57,50 @@ public class Searcher{
 				});
 			}};
 			final ButtonGroup grupoDirecao=new ButtonGroup();
-			final JRadioButton frente=new JRadioButton("Frente"){{	//FRENTE
+			final JRadioButton frente=new JRadioButton(MindSort.getLang().get("M_Menu_P_Dir_F","Forward")){{	//FRENTE
 				grupoDirecao.add(this);
 				setSelected(true);
 				addItemListener(new ItemListener(){
 					public void itemStateChanged(ItemEvent i){
-						if(!matches.isEmpty())procurar.setText("Próximo");
+						if(!matches.isEmpty())procurar.setText(proximoTxt);
 					}
 				});
 			}};
-			final JRadioButton atras=new JRadioButton("Atrás"){{	//ATRÁS
+			final JRadioButton atras=new JRadioButton(MindSort.getLang().get("M_Menu_P_Dir_T","Backward")){{	//ATRÁS
 				grupoDirecao.add(this);
 				addItemListener(new ItemListener(){
 					public void itemStateChanged(ItemEvent i){
-						if(!matches.isEmpty())procurar.setText("Anterior");
+						if(!matches.isEmpty())procurar.setText(anteriorTxt);
 					}
 				});
 			}};
 			final ButtonGroup grupoEscopo=new ButtonGroup();
-			final JRadioButton tudo=new JRadioButton("Tudo"){{		//TUDO
+			final JRadioButton tudo=new JRadioButton(MindSort.getLang().get("M_Menu_P_Es_T","All")){{		//TUDO
 				grupoEscopo.add(this);
 				setSelected(true);
 				addItemListener(new ItemListener(){
 					public void itemStateChanged(ItemEvent i){reset();}
 				});
 			}};
-			final JRadioButton onlySelected=new JRadioButton("Somente seleção"){{	//APENAS SELECIONADOS
+			final JRadioButton onlySelected=new JRadioButton(MindSort.getLang().get("M_Menu_P_Es_S","Selected")){{	//APENAS SELECIONADOS
 				grupoEscopo.add(this);
 				addItemListener(new ItemListener(){
 					public void itemStateChanged(ItemEvent i){reset();}
 				});
 			}};
-			final JCheckBox wholeWord=new JCheckBox("Palavra inteira"){{			//PALAVRAS INTEIRAS
+			final JCheckBox wholeWord=new JCheckBox(MindSort.getLang().get("M_Menu_P_Op_P","Whole word")){{			//PALAVRAS INTEIRAS
 				addItemListener(new ItemListener(){
 					public void itemStateChanged(ItemEvent i){reset();}
 				});
 			}};
-			final JCheckBox diffMaiuscMinusc=new JCheckBox("Diferenciar maiúscula de minúscula"){{	//DIFERENCIAR CAPITAL
+			final JCheckBox diffMaiuscMinusc=new JCheckBox(MindSort.getLang().get("M_Menu_P_Op_D","Case sensitive")){{	//DIFERENCIAR CAPITAL
 				addItemListener(new ItemListener(){
 					public void itemStateChanged(ItemEvent i){reset();}
 				});
 			}};
 			getContentPane().add(new JPanel(){{				//PAINEL SUPERIOR
 				setLayout(new GridLayout(1,2));
-				add(new JLabel("Procurar:"){{					//PROCURAR
+				add(new JLabel(MindSort.getLang().get("M_Menu_P_Tx","Find:")){{					//PROCURAR
 					setHorizontalAlignment(JLabel.LEFT);
 					setHorizontalTextPosition(JLabel.LEFT);
 					setLabelFor(termo);
@@ -112,7 +117,8 @@ public class Searcher{
 						add(frente);									//FRENTE
 						add(atras);										//ATRÁS
 						setBorder(BorderFactory.createCompoundBorder(
-								BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Direção"),
+								BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+										MindSort.getLang().get("M_Menu_P_Dir","Direction")),
 								BorderFactory.createEmptyBorder(5,10,10,10)
 						));
 					}});
@@ -121,7 +127,8 @@ public class Searcher{
 						add(tudo);										//TUDO
 						add(onlySelected);								//APENAS SELECIONADOS
 						setBorder(BorderFactory.createCompoundBorder(
-								BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Escopo"),
+								BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+										MindSort.getLang().get("M_Menu_P_Es","Scope")),
 								BorderFactory.createEmptyBorder(5,10,10,10)
 						));
 					}});
@@ -131,14 +138,15 @@ public class Searcher{
 					add(wholeWord);										//PALAVRAS INTEIRAS
 					add(diffMaiuscMinusc);								//DIFERENCIAR CAPITAL
 					setBorder(BorderFactory.createCompoundBorder(
-							BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Opções"),
+							BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+									MindSort.getLang().get("M_Menu_P_Op","Options")),
 							BorderFactory.createEmptyBorder(5,10,10,10)
 					));
 				}});
 			}},BorderLayout.CENTER);
 			getContentPane().add(new JPanel(){{					//PAINEL INFERIOR
 				setLayout(new GridLayout(2,2));
-				add(destacar=new JButton("Destacar"){{						//DESTACAR
+				add(destacar=new JButton(MindSort.getLang().get("M_Menu_P_D","Highlight")){{						//DESTACAR
 					addActionListener(new ActionListener(){
 						public void actionPerformed(ActionEvent a){
 							reset();
@@ -146,7 +154,7 @@ public class Searcher{
 						}
 					});
 				}});
-				add(procurar=new JButton("Procurar"){{						//PROCURAR
+				add(procurar=new JButton(procurarTxt){{						//PROCURAR
 					addActionListener(new ActionListener(){
 						public void actionPerformed(ActionEvent a){
 							if(!matches.isEmpty()){
@@ -161,7 +169,7 @@ public class Searcher{
 					setHorizontalAlignment(JLabel.LEFT);
 					setHorizontalTextPosition(JLabel.LEFT);
 				}});
-				add(new JButton("Fechar"){{							//FECHAR
+				add(new JButton(MindSort.getLang().get("M_Menu_P_F","Close")){{							//FECHAR
 					addActionListener(new ActionListener(){
 						public void actionPerformed(ActionEvent a){
 							dispensar();
@@ -221,7 +229,7 @@ public class Searcher{
 	}
 	public void reset(){
 		resultado.setText("");
-		procurar.setText("Procurar");
+		procurar.setText(procurarTxt);
 		matches.clear();
 		index=0;
 		procurar.setEnabled(!termo.getText().isEmpty());
@@ -231,9 +239,9 @@ public class Searcher{
 	private MatchMade matches;
 	private int index=0;
 	private void listar(boolean frente){
-		if(!procurar.getText().equals("Listar")){
+		if(!procurar.getText().equals(listarTxt)){
 			index+=(frente?+1:-1);
-		}else procurar.setText(frente?"Próximo":"Anterior");
+		}else procurar.setText(frente?proximoTxt:anteriorTxt);
 		if(index<0)index=matches.size()-1;		//RESETA PARA O FIM
 		if(index>=matches.size())index=0;		//RESETA PARA O COMEÇO
 		tree.getActions().unSelectAll();
@@ -261,15 +269,15 @@ public class Searcher{
 		matches.search(termo,frente,onlySelected,wholeWord,diffMaiuscMinusc);
 		final int size=matches.size();
 		if(size==0){
-			resultado.setText("Nenhum encontro!");
+			resultado.setText(MindSort.getLang().get("M_Menu_P_P_NE","No encounter!"));
 			Toolkit.getDefaultToolkit().beep();
 		}else if(size==1){
-			resultado.setText(size+" instante encontrado!");
+			resultado.setText(size+MindSort.getLang().get("M_Menu_P_P_I"," instance found!"));
 			listar(frente);
 		}else{
-			resultado.setText(size+" instantes encontrados!");
+			resultado.setText(size+MindSort.getLang().get("M_Menu_P_P_Is"," instances found!"));
 		}
-		procurar.setText("Listar");
+		procurar.setText(listarTxt);
 		tree.getPainel().getJanela().requestFocus();
 		tree.draw();
 	}
@@ -282,12 +290,12 @@ public class Searcher{
 		matches.search(termo,true,onlySelected,wholeWord,diffMaiuscMinusc);
 		final int size=matches.size();
 		if(size==0){
-			resultado.setText("Nenhum resultado!");
+			resultado.setText(MindSort.getLang().get("M_Menu_P_D_NR","No results!"));
 			Toolkit.getDefaultToolkit().beep();
 		}else if(size==1){
-			resultado.setText(size+" objeto selecionado!");
+			resultado.setText(size+MindSort.getLang().get("M_Menu_P_D_O"," selected object!"));
 		}else{
-			resultado.setText(size+" objetos selecionados!");
+			resultado.setText(size+MindSort.getLang().get("M_Menu_P_D_Os"," selected objects!"));
 		}
 		tree.getPainel().getJanela().requestFocus();
 		tree.draw();
