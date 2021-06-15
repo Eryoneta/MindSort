@@ -35,7 +35,8 @@ public class Toggle extends JMenuItem{
 	public Toggle(JMenuBar menu,String nome){
 		super(nome);
 		if(menu==null)return;
-		setBackground(corPadrao=menu.getBackground());
+		corPadrao=menu.getBackground();
+		setBackground(menu.getBackground());
 		setForeground(menu.getForeground());
 	}
 //FUNCS

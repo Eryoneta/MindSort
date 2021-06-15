@@ -1,4 +1,5 @@
 package main.janela;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dialog;
@@ -14,7 +15,6 @@ import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,18 +79,19 @@ public class Borda{
 		public Window getJanela(){return janela;}
 //BORDAS
 	public static int TOP_WIDTH=30;
-	public static int WIDTH=8;
-		public int getInnerX(){return WIDTH;}
+	public static int WIDTH=1;
+	public static int SHADOW=8;
+		public int getInnerX(){return SHADOW+WIDTH;}
 		public int getInnerY(){return TOP_WIDTH;}
-		public int getInnerWidth(){return janela.getWidth()-WIDTH-WIDTH;}
-		public int getInnerHeight(){return janela.getHeight()-TOP_WIDTH-WIDTH;}
+		public int getInnerWidth(){return janela.getWidth()-SHADOW-WIDTH-WIDTH-SHADOW;}
+		public int getInnerHeight(){return janela.getHeight()-TOP_WIDTH-SHADOW-WIDTH;}
 	public Rectangle getInnerBounds(){return new Rectangle(getInnerX(),getInnerY(),getInnerWidth(),getInnerHeight());}
 //ÁREAS DAS BORDAS
 	private Rectangle getTitleBar(){		return new Rectangle(getInnerX(),0,getInnerWidth(),getInnerY());}
-	private Rectangle getTopBorder(){		return new Rectangle(0,0,janela.getWidth(),Borda.WIDTH);}
-	private Rectangle getBottomBorder(){	return new Rectangle(0,janela.getHeight()-Borda.WIDTH,janela.getWidth(),Borda.WIDTH);}
-	private Rectangle getLeftBorder(){		return new Rectangle(0,0,Borda.WIDTH,janela.getHeight());}
-	private Rectangle getRightBorder(){		return new Rectangle(janela.getWidth()-Borda.WIDTH,0,Borda.WIDTH,janela.getHeight());}
+	private Rectangle getTopBorder(){		return new Rectangle(0,0,janela.getWidth(),Borda.SHADOW);}
+	private Rectangle getBottomBorder(){	return new Rectangle(0,janela.getHeight()-Borda.SHADOW,janela.getWidth(),Borda.SHADOW);}
+	private Rectangle getLeftBorder(){		return new Rectangle(0,0,Borda.SHADOW,janela.getHeight());}
+	private Rectangle getRightBorder(){		return new Rectangle(janela.getWidth()-Borda.SHADOW,0,Borda.SHADOW,janela.getHeight());}
 //VAR GLOBAIS
 	private static Color WINDOW_COLOR=Color.DARK_GRAY;
 		public static Color getBordaCor(){return WINDOW_COLOR;}
@@ -155,7 +156,9 @@ public class Borda{
 			public void mouseDragged(MouseEvent m){
 				if(side.is(Side.NONE))return;
 				isDragging=true;
-				resize(m.getLocationOnScreen());
+				if(element.tree.Cursor.match(m,element.tree.Cursor.LEFT)){
+					resize(m.getLocationOnScreen());
+				}
 			}
 			private void setCursor(){
 				int cursor=0;
@@ -204,6 +207,10 @@ public class Borda{
 	}
 //DRAW
 	public void draw(Graphics imagemEdit){
+		final Rectangle area=imagemEdit.getClipBounds();
+		((Graphics2D)imagemEdit).setComposite(AlphaComposite.Clear);	//LIMPA A SOMBRA
+		((Graphics2D)imagemEdit).fillRect(area.x,area.y,area.width,area.height);
+		((Graphics2D)imagemEdit).setComposite(AlphaComposite.SrcOver);
 		drawShadow(imagemEdit);
 		drawBorda(imagemEdit);
 	}
@@ -211,13 +218,13 @@ public class Borda{
 			final Rectangle area=imagemEdit.getClipBounds();
 			final BufferedImage imagem=new BufferedImage(area.width,area.height,BufferedImage.TYPE_INT_ARGB);
 			final Graphics2D imagemEdit2D=(Graphics2D)imagem.getGraphics();
-			drawShadowBlock(imagemEdit2D,	area.width-WIDTH,	WIDTH,					area.width,			area.height-WIDTH,	Side.RIGHT);
-			drawShadowBlock(imagemEdit2D,	WIDTH,				WIDTH,					0,					area.height-WIDTH,	Side.LEFT);
-			drawShadowBlock(imagemEdit2D,	WIDTH,				area.height-WIDTH,		area.width-WIDTH,	area.height,		Side.BOTTOM);
-			drawShadowBlock(imagemEdit2D,	area.width-WIDTH*2,	area.height-WIDTH*2,	area.width,			area.height,		Side.BOTTOM_RIGHT);
-			drawShadowBlock(imagemEdit2D,	WIDTH*2,			area.height-WIDTH*2,	0,					area.height,		Side.BOTTOM_LEFT);
-			drawShadowBlock(imagemEdit2D,	WIDTH*2,			WIDTH*2,				0,					0,					Side.TOP_LEFT);
-			drawShadowBlock(imagemEdit2D,	area.width-WIDTH*2,	WIDTH*2,				area.width,			0,					Side.TOP_RIGHT);
+			drawShadowBlock(imagemEdit2D,	area.width-SHADOW,		SHADOW,					area.width,			area.height-SHADOW,	Side.RIGHT);
+			drawShadowBlock(imagemEdit2D,	SHADOW,					SHADOW,					0,					area.height-SHADOW,	Side.LEFT);
+			drawShadowBlock(imagemEdit2D,	SHADOW,					area.height-SHADOW,		area.width-SHADOW,	area.height,		Side.BOTTOM);
+			drawShadowBlock(imagemEdit2D,	area.width-SHADOW*2,	area.height-SHADOW*2,	area.width,			area.height,		Side.BOTTOM_RIGHT);
+			drawShadowBlock(imagemEdit2D,	SHADOW*2,				area.height-SHADOW*2,	0,					area.height,		Side.BOTTOM_LEFT);
+			drawShadowBlock(imagemEdit2D,	SHADOW*2,				SHADOW*2,				0,					0,					Side.TOP_LEFT);
+			drawShadowBlock(imagemEdit2D,	area.width-SHADOW*2,	SHADOW*2,				area.width,			0,					Side.TOP_RIGHT);
 			imagemEdit.drawImage(imagem,0,0,null);
 		}
 			private void drawShadowBlock(Graphics2D imagemEdit2D,int x1,int y1,int x2,int y2,Side side){
@@ -249,32 +256,34 @@ public class Borda{
 					default:	break;
 				}
 				imagemEdit2D.setPaint(new GradientPaint(x1,y1,sombra,x2,y2,transparente));
-				imagemEdit2D.fill(new Rectangle2D.Double(x,y,width,height));
+				imagemEdit2D.fillRect(x,y,width,height);
 			}
 		private void drawBorda(Graphics imagemEdit){
 		//CONFIG TEXTO
-			final BufferedImage buffer=new BufferedImage(getInnerWidth(),getInnerHeight(),BufferedImage.TYPE_INT_RGB);	//A ÚNICA FORMA DE LCD FUNCIONAR
+			final BufferedImage buffer=new BufferedImage(
+					WIDTH+getInnerWidth()+WIDTH,
+					TOP_WIDTH+getInnerHeight()+WIDTH,BufferedImage.TYPE_INT_RGB);	//A ÚNICA FORMA DE LCD FUNCIONAR
 			final Graphics2D bufferEdit=(Graphics2D)buffer.getGraphics();
 			bufferEdit.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);	//ADICIONA BORDA, CONTRASTE
 			bufferEdit.translate(-getInnerX(),0);	//ALINHA O QUE SEGUIR COM A JANELA
 		//BORDA
 			bufferEdit.setColor(janela.isFocused()?getBordaCor():getBordaDisabledCor());
-			bufferEdit.fillRect(getInnerX()-1,0,getInnerWidth()+2,janela.getHeight()-WIDTH+1);	//BORDA
+			bufferEdit.fillRect(getInnerX(),0,buffer.getWidth(),buffer.getHeight());	//BORDA
 		//ICONE
 			final boolean isIconified=!getJanela().getIconImages().isEmpty();
 			if(isIconified){
 				final Image icone=getJanela().getIconImages().get(0);
-				bufferEdit.drawImage(icone,WIDTH+5,WIDTH,16,16,null);		//ICONE
+				bufferEdit.drawImage(icone,SHADOW+5,SHADOW,16,16,null);		//ICONE
 			}
 		//TITULO
 			bufferEdit.setColor(janela.isFocused()?Color.WHITE:new Color(160,143,176));
 			bufferEdit.setFont(getFonte());
 			String titulo=((Dialog)janela).getTitle();
-			final int x=WIDTH+5+(isIconified?16+5:0);
+			final int x=SHADOW+5+(isIconified?16+5:0);
 			final int y=3+bufferEdit.getFontMetrics().getHeight();
 			int buttonsWidth=0; 
 			for(Botao botao:botoes)buttonsWidth+=botao.getWidth();
-			final int widthLimite=getInnerWidth()-x-(buttonsWidth+WIDTH)-bufferEdit.getFontMetrics().stringWidth("...");
+			final int widthLimite=getInnerWidth()-x-(buttonsWidth+SHADOW)-bufferEdit.getFontMetrics().stringWidth("...");
 			boolean didCut=false;
 			while(bufferEdit.getFontMetrics().stringWidth(titulo)>widthLimite){
 				if(titulo.length()-2<0){
@@ -288,6 +297,6 @@ public class Borda{
 			bufferEdit.drawString(titulo,x,y);	//TITULO
 		//BOTÕES
 			for(Botao botao:botoes)botao.draw(bufferEdit);
-			imagemEdit.drawImage(buffer,getInnerX(),0,null);	//PASSA UM RGB PARA O RGBA
+			imagemEdit.drawImage(buffer,getInnerX()-WIDTH,0,null);	//PASSA UM RGB PARA O RGBA
 		}
 }

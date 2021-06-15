@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
-
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
@@ -37,19 +36,21 @@ public class Janela{
 			janelaVidro.setSize(janelaVidro.getWidth(),height);
 		}
 //LOCK
-	public void setLocked(boolean locked){
-		if(locked){
-			janela.remove(getPainel());
-			janelaVidro.add(getPainel());
-			getPainel().setBounds(janelaVidro.getBorda().getInnerBounds());
-		}else{
-			janelaVidro.remove(getPainel());
-			janela.add(getPainel());
+	private boolean isLocked=false;
+		public void setLocked(boolean locked){
+			if(locked){
+				janela.remove(getPainel());
+				janelaVidro.add(getPainel());
+				getPainel().setBounds(janelaVidro.getBorda().getInnerBounds());
+			}else{
+				janelaVidro.remove(getPainel());
+				janela.add(getPainel());
+			}
+			janela.setVisible(!locked);
+			janelaVidro.setVisible(locked);
+			isLocked=locked;
 		}
-		janela.setVisible(!locked);
-		janelaVidro.setVisible(locked);
-	}
-	public boolean isLocked(){return (!janela.isVisible()&&janelaVidro.isVisible());}
+		public boolean isLocked(){return isLocked;}
 //MAIN
 	public Janela(JFrame janelaPai){
 		this.janelaPai=janelaPai;
@@ -148,7 +149,7 @@ public class Janela{
 	private void limitBounds(){
 		janelaVidro.setBounds(janelaVidro.getBounds());
 		getPainel().setBounds(janelaVidro.getBorda().getInnerBounds());
-		if(!windowSize.equals(janelaVidro.getSize())){	//ATUALIZA APENAS SE MUDADO O TAMANHO(EVITA DA SOMBRA ESCURECER)
+		if(!windowSize.equals(janelaVidro.getSize())){	//ATUALIZA APENAS SE MUDADO O TAMANHO
 			janelaVidro.repaint();
 			windowSize.setSize(janelaVidro.getSize());
 		}
@@ -168,10 +169,6 @@ public class Janela{
 		janela.setBackground(cor);
 		janelaVidro.setBackground(cor);
 		janelaVidro.repaint();
-	}
-	public void setDefaultCloseOperation(int operation){
-		janela.setDefaultCloseOperation(operation);
-		janelaVidro.setDefaultCloseOperation(operation);
 	}
 	public void setAlwaysOnTop(boolean topo){
 		janelaVidro.setAlwaysOnTop(topo);
@@ -195,5 +192,19 @@ public class Janela{
 	}
 	public boolean isDragging(){
 		return janelaVidro.getBorda().isDragging();
+	}
+	public void setVisible(boolean visible){
+		if(isLocked){
+			if(visible){
+				janelaVidro.setVisible(true);
+			}else janelaVidro.dispose();
+		}else{
+			if(visible){
+				janela.setVisible(true);
+			}else janela.dispose();
+		}
+	}
+	public void updateLang(){
+		janelaVidro.updateLang();
 	}
 }
