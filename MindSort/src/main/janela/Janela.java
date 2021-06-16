@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
@@ -193,7 +195,7 @@ public class Janela{
 	public boolean isDragging(){
 		return janelaVidro.getBorda().isDragging();
 	}
-	public void setVisible(boolean visible){
+	public void show(boolean visible){
 		if(isLocked){
 			if(visible){
 				janelaVidro.setVisible(true);
@@ -206,5 +208,29 @@ public class Janela{
 	}
 	public void updateLang(){
 		janelaVidro.updateLang();
+	}
+	public void addWindowListenerOnClosed(Runnable action){
+		janela.addWindowListener(new WindowListener(){
+			public void windowOpened(WindowEvent w){}
+			public void windowIconified(WindowEvent w){}
+			public void windowDeiconified(WindowEvent w){}
+			public void windowDeactivated(WindowEvent w){}
+			public void windowClosing(WindowEvent w){}
+			public void windowClosed(WindowEvent w){
+				action.run();
+			}
+			public void windowActivated(WindowEvent w){}
+		});
+		janelaVidro.addWindowListener(new WindowListener(){
+			public void windowOpened(WindowEvent w){}
+			public void windowIconified(WindowEvent w){}
+			public void windowDeiconified(WindowEvent w){}
+			public void windowDeactivated(WindowEvent w){}
+			public void windowClosing(WindowEvent w){}
+			public void windowClosed(WindowEvent w){
+				action.run();
+			}
+			public void windowActivated(WindowEvent w){}
+		});
 	}
 }
