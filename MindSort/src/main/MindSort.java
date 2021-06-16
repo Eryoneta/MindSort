@@ -93,7 +93,7 @@ public class MindSort{
 	private Toggle lineWrap;
 	private Toggle showAllChars;
 	private Toggle showTexto;
-	public static Cor MENU=new Cor(220,220,220);
+	private Toggle showNotes;
 //LANG
 	private static LanguagePackage LANG=new LanguagePackage();
 		public static LanguagePackage getLang(){return LANG;}
@@ -234,8 +234,9 @@ public class MindSort{
 				final JMenuBar menu=this;
 				final Cor corBorda=Cor.getChanged(Modulo.Cores.FUNDO,0.7f);
 				setBorder(BorderFactory.createMatteBorder(0,0,1,0,corBorda));
-				setBackground(MindSort.MENU);
+				setBackground(Tree.FUNDO);
 				setForeground(Tree.Fonte.DARK);
+				setOpaque(true);
 			//ARQUIVO
 				add(new Menu(menu,MindSort.getLang().get("M_Menu_F","File")){{
 				//NOVO
@@ -496,9 +497,9 @@ public class MindSort{
 								fullscreen(fullscreen.isPressed());
 								if(fullscreen.isPressed()){
 									isToSeparateText=separateText.isPressed();
-									separateText.setToggle(true);
+									separateText.doToggle(true);
 								}else{
-									separateText.setToggle(isToSeparateText);
+									separateText.doToggle(isToSeparateText);
 								}
 								separateText.setEnabled(!fullscreen.isPressed());
 							}
@@ -810,20 +811,22 @@ public class MindSort{
 				}});
 			//TEXTO
 				add(showTexto=new Toggle(menu,MindSort.getLang().get("M_Menu_T","Text")){{
-					setAction(new AbstractAction(){
-						public void actionPerformed(ActionEvent a){
-							janelaTexto.setVisible(showTexto.isPressed());
+					setAction(new Runnable(){
+						public void run(){
+							janelaTexto.show(showTexto.isPressed());
 						}
 					});
-//					setIcon(new ImageIcon(getImage("Texto")));
+					setIcon(new ImageIcon(getImage("Texto")));
 //					setAtalho(Event.CTRL_MASK,KeyEvent.VK_T,false,false);
 					setMaximumSize(new Dimension(getPreferredSize().width,100));
 				}});
 			//ANOTAÇÕES
-				add(new Botao(menu,MindSort.getLang().get("M_Menu_A","Notes")){{
-					setAction(new AbstractAction(){
-						public void actionPerformed(ActionEvent a){
-							janelaNotes.setVisible(true);
+				add(showNotes=new Toggle(menu,MindSort.getLang().get("M_Menu_A","Notes")){{
+					setAction(new Runnable(){
+						public void run(){
+							if(showNotes.isPressed()){
+								janelaNotes.setVisible(true);
+							}else janelaNotes.dispose();
 						}
 					});
 					setIcon(new ImageIcon(getImage("Anotações")));
@@ -855,6 +858,11 @@ public class MindSort{
 			});
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}});
+		addWindowListenerOnClosed(new Runnable(){
+			public void run(){
+				showTexto.setToggle(false);
+			}
+		});
 		new Thread(){
 			public void run(){
 				Dimension size=janelaTexto.getBounds().getSize();
@@ -904,7 +912,7 @@ public class MindSort{
 			final JMenuBar menu=this;
 			final Cor corBorda=Cor.getChanged(Modulo.Cores.FUNDO,0.7f);
 			setBorder(BorderFactory.createMatteBorder(0,0,1,0,corBorda));
-			setBackground(MindSort.MENU);
+			setBackground(Cor.WHITE);
 			setForeground(Tree.Fonte.DARK);
 		//ARQUIVO
 			add(new Menu(menu,MindSort.getLang().get("M_Menu_F","File")){{
@@ -970,21 +978,33 @@ public class MindSort{
 				}
 			});
 		}});
+		addWindowListener(new WindowListener(){
+			public void windowOpened(WindowEvent w){}
+			public void windowIconified(WindowEvent w){}
+			public void windowDeiconified(WindowEvent w){}
+			public void windowDeactivated(WindowEvent w){}
+			public void windowClosing(WindowEvent w){}
+			public void windowClosed(WindowEvent w){
+				showNotes.setToggle(false);
+			}
+			public void windowActivated(WindowEvent w){}
+		});
 	}};
 //MAIN
 	public MindSort(String[]args){
 		try{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			final Font fonteMenu=new Font(FONTE.getName(),Font.PLAIN,FONTE.getSize());
 			final Cor corBorda=Cor.getChanged(Modulo.Cores.FUNDO,0.7f);
+			final Cor corSelec=new Cor(144,200,246);
 			UIManager.put("Menu.font",fonteMenu);
 			UIManager.put("MenuItem.font",fonteMenu);
-			UIManager.put("Menu.selectionBackground",Cor.getChanged(MindSort.MENU,1.1f));
-			UIManager.put("MenuItem.selectionBackground",Cor.getChanged(MindSort.MENU,1.1f));
+			UIManager.put("Menu.selectionBackground",corSelec);
+			UIManager.put("MenuItem.selectionBackground",corSelec);
 			UIManager.put("PopupMenu.border",BorderFactory.createLineBorder(corBorda));
 			UIManager.put("Separator.foreground",corBorda);
-			UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorForeground",corBorda);
 			UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorFont",FONTE);
+			UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorForeground",corBorda);
 		}catch(ClassNotFoundException|InstantiationException|IllegalAccessException|UnsupportedLookAndFeelException erro){
 			MindSort.mensagem(
 					MindSort.getLang().get("M_Err2","Error: Style couldn't be configured!"),
@@ -998,13 +1018,14 @@ public class MindSort{
 		getIconFolder();
 		getIniConfig();
 		tree.clear();	//ATUALIZA O IDIOMA DOS MODS
-		fullscreen.setToggle(fullscreen.isPressed());
-		separateText.setToggle(separateText.isPressed());
-		autoFocusText.setToggle(autoFocusText.isPressed());
-		showGrid.setToggle(showGrid.isPressed());
-		lineWrap.setToggle(lineWrap.isPressed());
-		showAllChars.setToggle(showAllChars.isPressed());
-		showTexto.setToggle(true);
+		fullscreen.doToggle(fullscreen.isPressed());
+		separateText.doToggle(separateText.isPressed());
+		autoFocusText.doToggle(autoFocusText.isPressed());
+		showGrid.doToggle(showGrid.isPressed());
+		lineWrap.doToggle(lineWrap.isPressed());
+		showAllChars.doToggle(showAllChars.isPressed());
+		showTexto.doToggle(true);
+		showNotes.doToggle(false);
 		tree.setFocusOn(new Objeto[]{Tree.getMestre()});
 		janela.requestFocus();
 		if(args.length>0)abrir(new File(args[0]));
@@ -1207,7 +1228,7 @@ public class MindSort{
 				//FONTE
 					case "fonte":						setTreeFont(getFont(linha));												break;
 				//FUNDO
-					case "showGrid":					showGrid.setToggle(getBoolean(linha));										break;
+					case "showGrid":					showGrid.doToggle(getBoolean(linha));										break;
 				//PALETA
 					case "cor_0_0":						CorPick.PALETA_DEFAULT[0][0]=getCor(linha);									break;
 					case "cor_0_1":						CorPick.PALETA_DEFAULT[0][1]=getCor(linha);									break;
@@ -1230,10 +1251,10 @@ public class MindSort{
 					case "cor_3_4":						CorPick.PALETA_DEFAULT[3][4]=getCor(linha);									break;
 					case "cor_3_5":						CorPick.PALETA_DEFAULT[3][5]=getCor(linha);									break;
 				//TEXTO
-					case "lineWrap":					lineWrap.setToggle(getBoolean(linha));										break;
-					case "showAllChars":				showAllChars.setToggle(getBoolean(linha));									break;
-					case "separarTextWindow":			separateText.setToggle(getBoolean(linha));									break;
-					case "autoFocarTextWindow":			autoFocusText.setToggle(getBoolean(linha));									break;
+					case "lineWrap":					lineWrap.doToggle(getBoolean(linha));										break;
+					case "showAllChars":				showAllChars.doToggle(getBoolean(linha));									break;
+					case "separarTextWindow":			separateText.doToggle(getBoolean(linha));									break;
+					case "autoFocarTextWindow":			autoFocusText.doToggle(getBoolean(linha));									break;
 				//LIMITES
 					case "objetosLimite":				tree.setObjetosLimite(getInteger(linha));									break;
 					case "undoRedoLimite":				tree.getUndoRedoManager().setDoLimite(getInteger(linha));					break;

@@ -13,10 +13,14 @@ public class Toggle extends JMenuItem{
 	private Color corPadrao=new Color(255,255,255);
 //PRESSIONADO
 	private boolean pressed=false;
-		public void setToggle(boolean pressed){
+		public void doToggle(boolean pressed){
 			this.pressed=pressed;
 			setBackground(pressed?Cor.getChanged(corPadrao,1.2f):corPadrao);
 			if(acao!=null)acao.run();
+		}
+		public void setToggle(boolean pressed){
+			this.pressed=pressed;
+			setBackground(pressed?Cor.getChanged(corPadrao,1.2f):corPadrao);
 		}
 		public boolean isPressed(){return pressed;}
 //AÇÃO
@@ -25,7 +29,7 @@ public class Toggle extends JMenuItem{
 			this.acao=acao;
 			final AbstractAction run=new AbstractAction(){
 				public void actionPerformed(ActionEvent a){
-					setToggle(!pressed);
+					doToggle(!pressed);
 				}
 			};
 			getActionMap().put("acao",run);
