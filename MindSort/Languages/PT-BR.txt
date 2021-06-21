@@ -44,6 +44,7 @@ T_Err	"Erro...!"
 	T_Err3	"Erro: Não pôde-se configurar toolbox!"
 
 //MINDSORT
+M_L	"Carregando..."
 M_Menu_F		"Arquivo"
 	M_Menu_F_N		"Novo"
 	M_Menu_F_A		"Abrir..."

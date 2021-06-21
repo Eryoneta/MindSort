@@ -146,8 +146,8 @@ public class Botao{
 					case INACTIVE:default:break;
 					case HOVERED:break;
 					case ACTIVE:
-						setState(State.HOVERED);
 						click();
+						setState(State.INACTIVE);
 					break;
 					case DRAGGED:
 						setState(State.INACTIVE);
