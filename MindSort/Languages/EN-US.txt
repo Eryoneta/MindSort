@@ -2,8 +2,8 @@
 1	"EN-US"
 
 //TREE
-T_0	"New Mind Map"
-T_1	"Text"
+T_M	"New Mind Map"
+T_G	"Text"
 
 T_Pop_I			"Icons"
 	T_Pop_I_V		"Empty"
@@ -44,6 +44,7 @@ T_Err	"Error...!"
 	T_Err3	"Error: Couldn't configure toolbox!"
 
 //MINDSORT
+M_L	"Loading..."
 M_Menu_F		"File"
 	M_Menu_F_N		"New"
 	M_Menu_F_A		"Open..."

@@ -178,13 +178,31 @@ public class MindSort{
 		addWindowListener(new WindowListener(){
 			public void windowOpened(WindowEvent w){}
 			public void windowIconified(WindowEvent w){}
-			public void windowDeiconified(WindowEvent w){}
+			public void windowDeiconified(WindowEvent w){	//CHAMA A JANELA_TEXTO AO DEICONIFICAR
+				if(!separateText.isPressed()&&autoFocusText.isPressed()&&showTexto.isPressed()){
+					focusJanelaTexto();
+					focusJanela();
+				}
+			}
 			public void windowClosing(WindowEvent w){
 				if(salvarAntes())fechar();
 			}
 			public void windowClosed(WindowEvent w){}
 			public void windowActivated(WindowEvent w){}
 			public void windowDeactivated(WindowEvent w){}
+			private void focusJanela(){
+				if(janela.isFocused())return;
+				if(janelaTexto.isDragging())return;
+				if(tree.getTitulo().isVisible()){
+					tree.getTitulo().requestFocus();
+				}else janela.requestFocus();
+			}
+			private void focusJanelaTexto(){
+				if(janelaTexto.isFocused())return;
+				if(tree.getTexto().isEnabled()){
+					tree.getTexto().requestFocus();
+				}else janelaTexto.requestFocus();
+			}
 		});
 		addComponentListener(new ComponentAdapter(){
 			public void componentResized(ComponentEvent r){
@@ -1109,16 +1127,17 @@ public class MindSort{
 					MindSort.getLang().get("M_Err3","Error: Couldn't create .mind file!")+"\n"+erro,
 					Options.ERRO);
 		}
-		janela.setTitle(titulo+" - "+link);
+		janela.setTitle(mind.getName()+" - "+link);
 	}
 //ABRIR
 	private void abrir(File mind){
 		if(mind==null)return;
+		tree.clear();
+		Tree.getMestre().setTitle(MindSort.getLang().get("M_L","Loading..."));
+		tree.setFocusOn(new Objeto[]{Tree.getMestre()});
 		tree.setEnabled(false);
 		tree.setVisible(false);
-		tree.clear();
-		tree.setFocusOn(new Objeto[]{Tree.getMestre()});
-		new Thread(new Runnable(){
+		new Thread(new Runnable(){ 
 			public void run(){
 				try{
 					final Document tags=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(link=mind);

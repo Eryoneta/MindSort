@@ -93,6 +93,17 @@ public class Janela{
 				getPainel().setBounds(janelaVidro.getBorda().getInnerBounds());
 			}
 		});
+		janelaVidro.addWindowListener(new WindowListener(){
+			public void windowOpened(WindowEvent w){}
+			public void windowIconified(WindowEvent w){}
+			public void windowDeiconified(WindowEvent w){}
+			public void windowClosing(WindowEvent w){}
+			public void windowClosed(WindowEvent w){}
+			public void windowActivated(WindowEvent w){
+				if(isLocked())limitBounds();
+			}
+			public void windowDeactivated(WindowEvent w){}
+		});
 	}
 //FUNCS
 //ELEMENTOS
