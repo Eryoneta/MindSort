@@ -43,7 +43,7 @@ public class JanelaVidro extends JDialog{
 		final int size=Borda.TOP_WIDTH-Borda.SHADOW;
 		setSize(size*2,size);
 		setLegenda(MindSort.getLang().get("M_Tx_Me","Medium"));
-		setTitulo("◧");
+		setTitulo("◨");
 		getCores().setBackgroundOnHover(new Color(100,100,100));
 		getCores().setBackgroundOnActive(new Color(118,118,117));
 		setVisible(true);
@@ -163,11 +163,19 @@ public class JanelaVidro extends JDialog{
 		SMed.setLegenda(MindSort.getLang().get("M_Tx_Me","Medium"));
 		SMax.setLegenda(MindSort.getLang().get("M_Tx_Ma","Maximus"));
 	}
+	private void setSizeIcons(){
+		if(getOwner().getWidth()>getOwner().getHeight()){//HORIZONTAL
+			SMed.setTitulo("◨");
+		}else{
+			SMed.setTitulo("⬓");
+		}
+	}
 //DRAW
 @Override
 	public void paint(Graphics imagemEdit){
 		final Graphics2D imagemEdit2D=(Graphics2D)imagemEdit;
 	//BORDA
+		setSizeIcons();
 		getBorda().draw(imagemEdit2D);
 	//FUNDO
 		imagemEdit2D.setColor(Color.WHITE);

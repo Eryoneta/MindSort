@@ -4520,6 +4520,8 @@ public class JanelaVidro extends JDialog{
 	public void setBounds(int x,int y,int width,int height);
 	private void setButtonLocations();
 	private Rectangle getLimitedBounds(Rectangle newBounds);
+	public void updateLang();
+	private void setSizeIcons();
 //DRAW
 @Override
 	public void paint(Graphics imagemEdit);
