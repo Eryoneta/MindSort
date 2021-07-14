@@ -143,16 +143,16 @@ public class Janela{
 	private Rectangle getLimitedBounds(Rectangle newBounds){
 		if(janelaPai.getWidth()>janelaPai.getHeight()){//HORIZONTAL
 			final int widthMax=janelaPai.getWidth()-(janelaPai.getWidth()/5);
-			final int width=(horizontal==false?dialogDefaultWidth:Math.min(widthMax,newBounds.width));
+			final int width=(horizontal==false?getDialogDefaultWidth():Math.min(widthMax,newBounds.width));
 			newBounds.setSize(width,janelaPai.getHeight()-janelaPai.getInsets().top);
 			dialogDefaultWidth=width;
 			horizontal=true;
 			newBounds.setLocation(janelaPai.getX()+janelaPai.getWidth()-janelaVidro.getWidth(),janelaPai.getY()+janelaPai.getInsets().top);
 		}else{//VERTICAL
 			final int heightMax=janelaPai.getHeight()-(janelaPai.getHeight()/5);
-			final int height=(horizontal==true?dialogDefaultHeight:Math.min(heightMax,newBounds.height));
+			final int height=(horizontal==true?getDialogDefaultHeight():Math.min(heightMax,newBounds.height));
 			newBounds.setSize(janelaPai.getWidth(),height);
-			dialogDefaultWidth=height;
+			dialogDefaultHeight=height;
 			horizontal=false;
 			newBounds.setLocation(janelaPai.getX(),janelaPai.getY()+janelaPai.getHeight()-janelaVidro.getHeight());
 		}

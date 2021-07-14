@@ -1029,6 +1029,7 @@ public class MindSort{
 					Options.AVISO);
 		}
 		final String lang=Locale.getDefault().getLanguage()+"-"+Locale.getDefault().getCountry();
+//		final String lang="EN-US";
 		getLanguageFolder(lang);	//CARREGA IDIOMA, SE EXISTE 
 		MindSort.getLang().setLanguage(lang);
 		Tree.getLang().setLanguage(lang);
@@ -1229,7 +1230,7 @@ public class MindSort{
 		final File iniLink=new File(System.getProperty("user.dir")+"/"+ini);
 		if(iniLink.exists())try{
 			for(String linha:Files.readAllLines(iniLink.toPath(),StandardCharsets.UTF_8)){
-				final Matcher match=Pattern.compile("^\t?\t?([^=\n]+)=+").matcher(linha);
+				final Matcher match=Pattern.compile("^\t{0,}([^=\n]+)=+").matcher(linha);
 				if(match.find())switch(match.group(1)){
 				//ÁREA DA JANELA
 					case "x_Window":					janela.setLocation(getInteger(linha),janela.getY());						break;
