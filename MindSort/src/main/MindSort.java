@@ -1028,8 +1028,8 @@ public class MindSort{
 					MindSort.getLang().get("M_Err2","Error: Style couldn't be configured!"),
 					Options.AVISO);
 		}
-//		final String lang=Locale.getDefault().getLanguage()+"-"+Locale.getDefault().getCountry();
-		final String lang="EN-US";
+		final String lang=Locale.getDefault().getLanguage()+"-"+Locale.getDefault().getCountry();
+//		final String lang="EN-US";
 		getLanguageFolder(lang);	//CARREGA IDIOMA, SE EXISTE 
 		MindSort.getLang().setLanguage(lang);
 		Tree.getLang().setLanguage(lang);
