@@ -8,9 +8,9 @@ MindSort follows the idea of a mind map, but implemented as simple as possible, 
 ## Usage
 Following the same idea of a simple text editor, you can create and edit `.mind` files.
 
-You can create `Modules` and change it's `title`, `description`, `color`, `icons`, and `border style`.
+You can create `Modules` and change it's `title`, `text`, `color`, `icons`, and `border style`.
 
-You can connect `Modules` with `Connections` and change it's `description`, `border style` and `width`.
+You can connect `Modules` with `Connections` and change it's `text`, `border style` and `width`.
 
 And you can create `Nodules` within `Connections`to change it's path.
 
