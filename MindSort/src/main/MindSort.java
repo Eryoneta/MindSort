@@ -25,6 +25,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.RenderedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,6 +40,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -262,7 +264,9 @@ public class MindSort{
 						setAction(novoAction=new AbstractAction(){
 							public void actionPerformed(ActionEvent a){
 								if(salvarAntes()){
-									novo(choose(MindSort.getLang().get("M_Menu_F_N","New")));
+									novo(choose(
+											MindSort.getLang().get("M_Menu_F_N","New"),
+											getImage("Novo"),true));
 									abrir(link);
 								}
 							}
@@ -274,7 +278,9 @@ public class MindSort{
 					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_A","Open...")){{
 						setAction(abrirAction=new AbstractAction(){
 							public void actionPerformed(ActionEvent a){
-								if(salvarAntes())abrir(choose(MindSort.getLang().get("M_Menu_F_A","Open...")));
+								if(salvarAntes())abrir(choose(
+										MindSort.getLang().get("M_Menu_F_A","Open..."),
+										getImage("Abrir"),true));
 							}
 						});
 						setIcon(new ImageIcon(getImage("Abrir")));
@@ -286,7 +292,9 @@ public class MindSort{
 						setAction(salvarAction=new AbstractAction(){
 							public void actionPerformed(ActionEvent a){
 								tree.getTexto().setEnabled(false);
-								if(link==null)novo(choose(MindSort.getLang().get("M_Menu_F_S","Save")));
+								if(link==null)novo(choose(
+										MindSort.getLang().get("M_Menu_F_S","Save"),
+										getImage("Salvar"),true));
 								salvar(link);
 								tree.getTexto().setEnabled(true);
 							}
@@ -298,11 +306,25 @@ public class MindSort{
 					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_SC","Save As...")){{
 						setAction(salvarComoAction=new AbstractAction(){
 							public void actionPerformed(ActionEvent a){
-								novo(choose(MindSort.getLang().get("M_Menu_F_SC","Save As...")));
+								novo(choose(
+										MindSort.getLang().get("M_Menu_F_SC","Save As..."),
+										getImage("Salvar Como"),true));
 							}
 						});
 						setIcon(new ImageIcon(getImage("Salvar Como")));
 						setAtalho(Event.CTRL_MASK+Event.SHIFT_MASK,KeyEvent.VK_S,true,true);
+					}});
+					add(new JSeparator());
+				//EXPORTAR COMO
+					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_Ex","Export...")){{
+						setAction(salvarComoAction=new AbstractAction(){
+							public void actionPerformed(ActionEvent a){
+								exportar(choose(
+										MindSort.getLang().get("M_Menu_F_Ex","Export..."),
+										getImage("Exportar"),false));
+							}
+						});
+						setIcon(new ImageIcon(getImage("Exportar")));
 					}});
 					add(new JSeparator());
 				//SAIR
@@ -446,6 +468,16 @@ public class MindSort{
 						});
 						setIcon(new ImageIcon(getImage("Copiar")));
 						setAtalho(Event.CTRL_MASK,KeyEvent.VK_C,true,true);
+					}});
+				//COPIAR COMO IMAGEM
+					add(new Botao(menu,MindSort.getLang().get("M_Menu_E_CopImg","Copy As Image")){{
+						setAction(new AbstractAction(){
+							public void actionPerformed(ActionEvent a){
+								tree.getActions().copyAsImg();
+							}
+						});
+						setIcon(new ImageIcon(getImage("Copiar Como Imagem")));
+						setAtalho(Event.CTRL_MASK+Event.SHIFT_MASK,KeyEvent.VK_C,true,true);
 					}});
 				//COLAR
 					add(new Botao(menu,MindSort.getLang().get("M_Menu_E_Col","Paste")){{
@@ -655,7 +687,7 @@ public class MindSort{
 						setAction(new AbstractAction(){
 							public void actionPerformed(ActionEvent a){
 								new FontChooser(){{
-									setSelectedFont(Tree.Fonte.FONTE);
+									setSelectedFont(Tree.getFonte());
 									if(showDialog(janela)==FontChooser.Option.APPROVE_OPTION){
 										setTreeFont(getSelectedFont());
 									}
@@ -668,46 +700,51 @@ public class MindSort{
 					add(new Botao(menu,MindSort.getLang().get("M_Menu_C_T","Transparency...")){{
 						setAction(new AbstractAction(){
 							public void actionPerformed(ActionEvent a){
-								int index=0;
-								switch(janelaTexto.getTransparentInstance().getTransparencia()){
-									case 0:		index=0;	break;
-									case 10:	index=1;	break;
-									case 25:	index=2;	break;
-									case 40:	index=3;	break;
-									case 50:	index=4;	break;
-									case 60:	index=5;	break;
-									case 75:	index=6;	break;
-									case 90:	index=7;	break;
-									case 100:	index=8;	break;
-								}
 								final Object[]transNvlOpcoes=new Object[]{
 										MindSort.getLang().get("M_Menu_C_T_I","Invisible"),
 										"10%","25%","40%","50%","60%","75%","90%",
 										MindSort.getLang().get("M_Menu_C_T_O","Opaque")};
+								final int index=getValorIndex();
+								final int transparencia=getChoosenValor(transNvlOpcoes,index);
+								janelaTexto.getTransparentInstance().setTransparencia(transparencia);
+							}
+							private int getValorIndex(){
+								switch(janelaTexto.getTransparentInstance().getTransparencia()){
+									case 0:default:	return 0;
+									case 10:		return 1;
+									case 25:		return 2;
+									case 40:		return 3;
+									case 50:		return 4;
+									case 60:		return 5;
+									case 75:		return 6;
+									case 90:		return 7;
+									case 100:		return 8;
+								}
+							}
+							private int getChoosenValor(Object[]opcoes,int index){
 								final Object opcao=JOptionPane.showInputDialog(null,
 										MindSort.getLang().get("M_Menu_C_T_Ti","Text window transparency level"),
 										MindSort.getLang().get("M_Menu_C_T_Tx","Transparency Level"),
-										JOptionPane.QUESTION_MESSAGE,null,transNvlOpcoes,transNvlOpcoes[index]);
-								int transparencia=60;
-								index=5;
-								for(int i=0;i<transNvlOpcoes.length;i++){
-									if(((String)opcao).equals((String)transNvlOpcoes[i])){
+										JOptionPane.QUESTION_MESSAGE,null,opcoes,opcoes[index]);
+								if(opcao==null)return index;		//CANCELADO
+								for(int i=0;i<opcoes.length;i++){
+									if(((String)opcao).equals((String)opcoes[i])){
 										index=i;
 										break;
 									}
 								}
 								switch(index){
-									case 0:		transparencia=0;	break;
-									case 1:		transparencia=10;	break;
-									case 2:		transparencia=25;	break;
-									case 3:		transparencia=40;	break;
-									case 4:		transparencia=50;	break;
-									case 5:		transparencia=60;	break;
-									case 6:		transparencia=75;	break;
-									case 7:		transparencia=90;	break;
-									case 8:		transparencia=100;	break;
+									case 0:		return 0;
+									case 1:		return 10;
+									case 2:		return 25;
+									case 3:		return 40;
+									case 4:		return 50;
+									case 5:		return 60;
+									case 6:		return 75;
+									case 7:		return 90;
+									case 8:		return 100;
 								}
-								janelaTexto.getTransparentInstance().setTransparencia(transparencia);
+								return index;
 							}
 						});
 					}});
@@ -719,26 +756,32 @@ public class MindSort{
 								final Object[]objsLimOpcoes=new Object[]{
 										MindSort.getLang().get("M_Menu_C_LO_R","Restricted"),
 										50,100,200,300,500,1000,
-										MindSort.getLang().get("M_Menu_C_LO_N","No Restrictions")};
-								int index=0;
+										MindSort.getLang().get("M_Menu_C_LO_S","No Restrictions")};
+								final int index=getValorIndex(objsLimOpcoes);
+								final int limite=getChoosenValor(objsLimOpcoes,index);
+								tree.setObjetosLimite(limite);
+							}
+							private int getValorIndex(Object[]opcoes){
 								switch(tree.getObjetosLimite()){
-									case 0:		index=0;						break;
-									case -1:	index=objsLimOpcoes.length-1;	break;
+									case 0:		return 0;
+									case -1:	return opcoes.length-1;
 									default:
-										for(int i=1;i<objsLimOpcoes.length-1;i++){
-											if((Integer)objsLimOpcoes[i]==tree.getObjetosLimite())index=i;
+										for(int i=1;i<opcoes.length-1;i++){
+											if((Integer)opcoes[i]==tree.getObjetosLimite())return i;
 										}
-									break;
+										return opcoes.length-1;
 								}
+							}
+							private int getChoosenValor(Object[]opcoes,int index){
 								final Object opcao=JOptionPane.showInputDialog(null,
 										MindSort.getLang().get("M_Menu_C_LO_Ti","Limit of objects on screen before decreasing graphic quality"), 
 										MindSort.getLang().get("M_Menu_C_LO_Tx","Limit of objects"),
-										JOptionPane.QUESTION_MESSAGE,null,objsLimOpcoes,objsLimOpcoes[index]);
+										JOptionPane.QUESTION_MESSAGE,null,opcoes,opcoes[index]);
 								if(opcao instanceof Integer){
-									tree.setObjetosLimite((Integer)opcao);
+									return (Integer)opcao;
 								}else if(opcao instanceof String){
-									tree.setObjetosLimite(((String)opcao).equals((String)objsLimOpcoes[0])?0:-1);
-								}
+									return (((String)opcao).equals((String)opcoes[0])?0:-1);
+								}else return -1;
 							}
 						});
 					}});
@@ -750,25 +793,31 @@ public class MindSort{
 										MindSort.getLang().get("M_Menu_C_LDR_D","Disabled"),
 										50,100,200,300,500,1000,
 										MindSort.getLang().get("M_Menu_C_LDR_S","No Restrictions")};
-								int index=0;
+								final int index=getValorIndex(doLimOpcoes);
+								final int limite=getChoosenValor(doLimOpcoes,index);
+								tree.getUndoRedoManager().setDoLimite(limite);
+							}
+							private int getValorIndex(Object[]opcoes){
 								switch(tree.getUndoRedoManager().getDoLimite()){
-									case 0:		index=0;						break;
-									case -1:	index=doLimOpcoes.length-1;		break;
+									case 0:		return 0;
+									case -1:	return opcoes.length-1;
 									default:
-										for(int i=1;i<doLimOpcoes.length-1;i++){
-											if((Integer)doLimOpcoes[i]==tree.getUndoRedoManager().getDoLimite())index=i;
+										for(int i=1;i<opcoes.length-1;i++){
+											if((Integer)opcoes[i]==tree.getUndoRedoManager().getDoLimite())return i;
 										}
-									break;
+									return opcoes.length-1;
 								}
+							}
+							private int getChoosenValor(Object[]opcoes,int index){
 								final Object opcao=JOptionPane.showInputDialog(null,
 										MindSort.getLang().get("M_Menu_C_LDR_Ti","Stored undo and redo limit"), 
 										MindSort.getLang().get("M_Menu_C_LDR_Tx","Undo/Redo Limit"),
-										JOptionPane.QUESTION_MESSAGE,null,doLimOpcoes,doLimOpcoes[index]);
+										JOptionPane.QUESTION_MESSAGE,null,opcoes,opcoes[index]);
 								if(opcao instanceof Integer){
-									tree.getUndoRedoManager().setDoLimite((Integer)opcao);
+									return (Integer)opcao;
 								}else if(opcao instanceof String){
-									tree.getUndoRedoManager().setDoLimite(((String)opcao).equals((String)doLimOpcoes[0])?0:-1);
-								}
+									return (((String)opcao).equals((String)opcoes[0])?0:-1);
+								}else return -1;
 							}
 						});
 					}});
@@ -820,7 +869,8 @@ public class MindSort{
 				add(new Botao(menu,MindSort.getLang().get("M_Menu_P","Search")){{
 					setAction(new AbstractAction(){
 						public void actionPerformed(ActionEvent a){
-							new Searcher(tree).chamar();
+							searcher.updateInterface();
+							searcher.chamar();
 						}
 					});
 					setIcon(new ImageIcon(getImage("Pesquisar")));
@@ -835,7 +885,6 @@ public class MindSort{
 						}
 					});
 					setIcon(new ImageIcon(getImage("Texto")));
-//					setAtalho(Event.CTRL_MASK,KeyEvent.VK_T,false,false);
 					setMaximumSize(new Dimension(getPreferredSize().width,100));
 				}});
 			//ANOTAÇÕES
@@ -843,6 +892,7 @@ public class MindSort{
 					setAction(new Runnable(){
 						public void run(){
 							if(showNotes.isPressed()){
+								notesTexto.setFont(Tree.getFonte());
 								janelaNotes.setVisible(true);
 							}else janelaNotes.dispose();
 						}
@@ -925,53 +975,53 @@ public class MindSort{
 			}
 		}.start();
 	}};
-	private void updateJanelaTextoMenu(){
-		janelaTexto.setMenu(new JMenuBar(){{
-			final JMenuBar menu=this;
-			final Cor corBorda=Cor.getChanged(Modulo.Cores.FUNDO,0.7f);
-			setBorder(BorderFactory.createMatteBorder(0,0,1,0,corBorda));
-			setBackground(Cor.WHITE);
-			setForeground(Tree.Fonte.DARK);
-		//ARQUIVO
-			add(new Menu(menu,MindSort.getLang().get("M_Menu_F","File")){{
-			//NOVO
-				add(new Botao(menu,MindSort.getLang().get("M_Menu_F_N","New")){{
-					setAction(novoAction);
-					setIcon(new ImageIcon(getImage("Novo")));
-					setAtalho(Event.CTRL_MASK,KeyEvent.VK_N,true,true);
-				}});
-			//ABRIR
-				add(new Botao(menu,MindSort.getLang().get("M_Menu_F_A","Open...")){{
-					setAction(abrirAction);
-					setIcon(new ImageIcon(getImage("Abrir")));
-					setAtalho(Event.CTRL_MASK,KeyEvent.VK_O,true,true);
-				}});
-				add(new JSeparator());
-			//SALVAR
-				add(new Botao(menu,MindSort.getLang().get("M_Menu_F_S","Save")){{
-					setAction(salvarAction);
-					setIcon(new ImageIcon(getImage("Salvar")));
-					setAtalho(Event.CTRL_MASK,KeyEvent.VK_S,true,true);
-				}});
-			//SALVAR COMO
-				add(new Botao(menu,MindSort.getLang().get("M_Menu_F_SC","Save As...")){{
-					setAction(salvarComoAction);
-					setIcon(new ImageIcon(getImage("Salvar Como")));
-					setAtalho(Event.CTRL_MASK+Event.SHIFT_MASK,KeyEvent.VK_S,true,true);
-				}});
-				add(new JSeparator());
-			//SAIR
-				add(new Botao(menu,MindSort.getLang().get("M_Menu_F_E","Exit")){{
-					setAction(sairAction);
-					setIcon(new ImageIcon(getImage("Sair")));
-					setAtalho(Event.CTRL_MASK,KeyEvent.VK_W,true,true);
+		private void updateJanelaTextoMenu(){
+			janelaTexto.setMenu(new JMenuBar(){{
+				final JMenuBar menu=this;
+				final Cor corBorda=Cor.getChanged(Modulo.Cores.FUNDO,0.7f);
+				setBorder(BorderFactory.createMatteBorder(0,0,1,0,corBorda));
+				setBackground(Cor.WHITE);
+				setForeground(Tree.Fonte.DARK);
+			//ARQUIVO
+				add(new Menu(menu,MindSort.getLang().get("M_Menu_F","File")){{
+				//NOVO
+					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_N","New")){{
+						setAction(novoAction);
+						setIcon(new ImageIcon(getImage("Novo")));
+						setAtalho(Event.CTRL_MASK,KeyEvent.VK_N,true,true);
+					}});
+				//ABRIR
+					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_A","Open...")){{
+						setAction(abrirAction);
+						setIcon(new ImageIcon(getImage("Abrir")));
+						setAtalho(Event.CTRL_MASK,KeyEvent.VK_O,true,true);
+					}});
+					add(new JSeparator());
+				//SALVAR
+					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_S","Save")){{
+						setAction(salvarAction);
+						setIcon(new ImageIcon(getImage("Salvar")));
+						setAtalho(Event.CTRL_MASK,KeyEvent.VK_S,true,true);
+					}});
+				//SALVAR COMO
+					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_SC","Save As...")){{
+						setAction(salvarComoAction);
+						setIcon(new ImageIcon(getImage("Salvar Como")));
+						setAtalho(Event.CTRL_MASK+Event.SHIFT_MASK,KeyEvent.VK_S,true,true);
+					}});
+					add(new JSeparator());
+				//SAIR
+					add(new Botao(menu,MindSort.getLang().get("M_Menu_F_E","Exit")){{
+						setAction(sairAction);
+						setIcon(new ImageIcon(getImage("Sair")));
+						setAtalho(Event.CTRL_MASK,KeyEvent.VK_W,true,true);
+					}});
 				}});
 			}});
-		}});
-	}
+		}
 //JANELA DAS ANOTAÇÕES
 	private Texto notesTexto=new Texto(){{
-		setFont(Tree.Fonte.FONTE);
+		setFont(Tree.getFonte());
 		setForeground(Tree.Fonte.DARK);
 		setLineWrappable(true);
 	}};
@@ -1000,14 +1050,20 @@ public class MindSort{
 			public void windowOpened(WindowEvent w){}
 			public void windowIconified(WindowEvent w){}
 			public void windowDeiconified(WindowEvent w){}
-			public void windowDeactivated(WindowEvent w){}
 			public void windowClosing(WindowEvent w){}
 			public void windowClosed(WindowEvent w){
 				showNotes.setToggle(false);
 			}
-			public void windowActivated(WindowEvent w){}
+			public void windowDeactivated(WindowEvent w){
+				notesTexto.setEnabled(false);
+			}
+			public void windowActivated(WindowEvent w){
+				notesTexto.setEnabled(true);
+			}
 		});
 	}};
+//SEARCHER
+	private Searcher searcher=new Searcher(tree);
 //MAIN
 	public MindSort(String[]args){
 		try{
@@ -1091,7 +1147,7 @@ public class MindSort{
 		return Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/"+nome+".png"));
 	}
 //FILE CHOOSER
-	private File choose(String nome){
+	private File choose(String titulo,Image icone,boolean saveAsMind){
 		final JFileChooser choose=new JFileChooser(){
 			public void approveSelection(){
 				if(getSelectedFile().exists()){
@@ -1099,19 +1155,21 @@ public class MindSort{
 							getSelectedFile().getName()+MindSort.getLang().get("M_Menu_F_SC_Tx"," already exists.\nReplace it?"),
 							MindSort.getLang().get("M_Menu_F_SC_Ti","File already exists"),
 							JOptionPane.YES_NO_OPTION)){
-						case JOptionPane.YES_OPTION:super.approveSelection();return;
-						case JOptionPane.NO_OPTION:return;
-						case JOptionPane.CLOSED_OPTION:return;
+						case JOptionPane.YES_OPTION:	super.approveSelection();return;
+						case JOptionPane.NO_OPTION:		return;
+						case JOptionPane.CLOSED_OPTION:	return;
 					}
 				}
 				super.approveSelection();
 			}{
-			setFileFilter(new FileNameExtensionFilter("Mind Map","mind"));
+			if(saveAsMind) {
+				setFileFilter(new FileNameExtensionFilter("Mind Map (*.mind)","mind"));
+			}else setFileFilter(new FileNameExtensionFilter("Image (*.png)","png"));
 			setAcceptAllFileFilterUsed(false);
 		}};
-		final Frame icone=new Frame();
-		icone.setIconImage(getImage(nome));
-		return (choose.showDialog(icone,nome)==JFileChooser.APPROVE_OPTION?choose.getSelectedFile():null);
+		final Frame frameIcon=new Frame();
+		frameIcon.setIconImage(icone);
+		return (choose.showDialog(frameIcon,titulo)==JFileChooser.APPROVE_OPTION?choose.getSelectedFile():null);
 	}
 //NOVO
 	private void novo(File mind){
@@ -1119,8 +1177,8 @@ public class MindSort{
 		if(!mind.toString().endsWith(".mind"))mind=new File(mind+".mind");
 		try{
 			final PrintWriter writer=new PrintWriter(this.link=mind,"UTF-8");
-			writer.println("<mind fontName=\""+Tree.Fonte.FONTE.getName()+"\" fontSize=\""+Tree.Fonte.FONTE.getSize()+"\" fontStyle=\""+Tree.Fonte.FONTE.getStyle()+"\">");
-			writer.println("	<mod border=\"0\" color=\"(0,255,255)\" icons=\"\" title=\"Novo Mind\" x=\"0\" y=\"0\"><text/></mod>");
+			writer.println("<mind fontName=\""+Tree.getFonte().getName()+"\" fontSize=\""+Tree.getFonte().getSize()+"\" fontStyle=\""+Tree.getFonte().getStyle()+"\">");
+			writer.println("	<mod border=\"0\" color=\"(0,255,255)\" icons=\"\" title=\""+Tree.getLang().get("T_M","New Mind Map")+"\" x=\"0\" y=\"0\"><text/></mod>");
 			writer.println("</mind>");
 			writer.close();
 		}catch(Exception erro){
@@ -1198,7 +1256,9 @@ public class MindSort{
 				MindSort.getLang().get("M_Menu_F_S_Ti","Save .mind"),
 				JOptionPane.YES_NO_CANCEL_OPTION)){
 			case JOptionPane.YES_OPTION:
-				if(link==null)novo(choose("Salvar"));
+				if(link==null)novo(choose(
+						MindSort.getLang().get("M_Menu_F_S","Save"),
+						getImage("Salvar"),true));
 				salvar(link);
 			break;
 			case JOptionPane.NO_OPTION:
@@ -1217,6 +1277,18 @@ public class MindSort{
 		}catch(IOException erro){
 			MindSort.mensagem(
 					MindSort.getLang().get("M_Err6","Error: Unable to write to .mind file!")+"\n"+erro,
+					Options.ERRO);
+		}
+	}
+//EXPORTAR
+	private void exportar(File png){
+		if(png==null)return;
+		if(!png.toString().endsWith(".png"))png=new File(png+".png");
+	    try{
+			ImageIO.write((RenderedImage)tree.getImage(tree.getObjetos()),"png",png);
+		}catch(IOException erro){
+			MindSort.mensagem(
+					MindSort.getLang().get("M_Err6","Error: Couldn't open .png file!")+"\n"+erro,
 					Options.ERRO);
 		}
 	}
@@ -1320,7 +1392,7 @@ public class MindSort{
 			writer.println("		defaultWidth_TextWindow="+janelaTexto.getDialogDefaultWidth());
 			writer.println("		defaultHeight_TextWindow="+janelaTexto.getDialogDefaultHeight());
 			writer.println("	[Font]");
-			writer.println("		font="+Tree.Fonte.FONTE.getName()+","+Tree.Fonte.FONTE.getStyle()+","+Tree.Fonte.FONTE.getSize());
+			writer.println("		font="+Tree.getFonte().getName()+","+Tree.getFonte().getStyle()+","+Tree.getFonte().getSize());
 			writer.println("	[Fundo]");
 			writer.println("		showGrid="+showGrid.isPressed());
 			writer.println("	[Paleta]");

@@ -1,6 +1,7 @@
 package main.search;
 import element.tree.objeto.Objeto;
-public class Match{
+@SuppressWarnings("rawtypes")
+public class Match implements Comparable{
 //OBJETO
 	private Objeto obj;
 		public Objeto getObjeto(){return obj;}
@@ -18,5 +19,10 @@ public class Match{
 		this.isOnText=isOnText;
 		this.selecIni=selecIni;
 		this.selecFim=selecFim;
+	}
+@Override
+	public int compareTo(Object o){
+		final Match match=(Match)o;
+		return this.getObjeto().getIndex()-match.getObjeto().getIndex();
 	}
 }
