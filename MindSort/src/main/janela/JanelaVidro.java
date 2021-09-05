@@ -97,10 +97,10 @@ public class JanelaVidro extends JDialog{
 		SMed.setAction(new Runnable(){
 			public void run(){
 				if(janela.getWidth()>janela.getHeight()){//HORIZONTAL
-					final int widthMed=(janela.getWidth()/2)+janelaVidro.getBorda().getInnerX();	//DESCONSIDERA SOMBRA WIDTH
+					final int widthMed=(janela.getWidth()/2)+janelaVidro.getBorda().getInnerX();		//DESCONSIDERA SOMBRA WIDTH
 					janelaVidro.setSize(widthMed,janelaVidro.getHeight());		//LIMITADO PELO MIN_SIZE
 				}else{//VERTICAL
-					final int heightMed=janela.getHeight()/2;
+					final int heightMed=(janela.getHeight()/2)+(janelaVidro.getBorda().getInnerX()/2);	//DESCONSIDERA SOMBRA WIDTH(MAS APENAS METADE)
 					janelaVidro.setSize(janelaVidro.getWidth(),heightMed);		//LIMITADO PELO MIN_SIZE
 				}
 				janelaVidro.setBounds(getLimitedBounds(janelaVidro.getBounds()));

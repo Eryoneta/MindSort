@@ -12,36 +12,56 @@ public class MatchMade{
 //TREE
 	private Tree tree;
 //LISTA
-	final HashMap<Integer,List<Match>>matchesByObjs=new HashMap<>();
-		public List<Match>getByObj(Objeto obj){return matchesByObjs.get(obj.getIndex());}
-		public Match get(int index){
-			int indexTotal=0;
-			for(List<Match>matches:matchesByObjs.values()){
-				final int size=matches.size();
-				if(index>=indexTotal+size){
-					indexTotal+=size;
-					continue;	//PRÓXIMO OBJ
-				}
-				return matches.get(index-indexTotal);
-			}
-			return null;
+@SuppressWarnings("serial")
+	private class SortedList<T> extends ArrayList<T>{
+		//LISTA ORDENADA(POR VALOR) COM SUBLISTAS ORDENADAS(POR INSERÇÃO)
+		public boolean add(T valor){
+			super.add(getInsertIndex(valor),valor);
+			return true;
 		}
-		public void add(Match match){
-			final Objeto obj=match.getObjeto();
-			if(!matchesByObjs.containsKey(obj.getIndex())){
-				matchesByObjs.put(obj.getIndex(),new ArrayList<>());
+	@SuppressWarnings("unchecked")
+		private int getInsertIndex(T valor){
+			int min=0;
+			int max=size()-1;
+			while(min<=max){
+				int mid=(min+max)>>>1;
+				final Comparable<? super T>midValor=(Comparable<T>)super.get(mid);
+				final int compara=midValor.compareTo(valor);
+				if(compara<0)min=mid+1;				//VALOR MENOR
+					else if(compara>0)max=mid-1;	//VALOR MAIOR
+						else{						//VALOR IGUAL
+							for(int index=mid+1;true;index++){
+								if(++index>=super.size())return index-1;	//VALOR > LISTA = FIM DA LISTA
+								final Comparable<? super T>indexValor=(Comparable<T>)super.get(index);
+								final int subCompara=indexValor.compareTo(valor);
+								if(subCompara!=0)return index;				//VALOR_INDEX > VALOR = FIM DA SUBLISTA
+							}
+						}
 			}
-			final boolean added=matchesByObjs.get(obj.getIndex()).add(match);
-			if(added)size++;
+			return min;		//VALOR NOVO
 		}
-		public void del(Objeto obj){
-			if(matchesByObjs.get(obj.getIndex())!=null){
-				size-=matchesByObjs.get(obj.getIndex()).size();
-				matchesByObjs.remove(obj.getIndex());
-			}
+	}
+	private SortedList<Match>matches=new SortedList<>();
+		public List<Match>getMatchs(){return matches;}
+		public Match get(int index){return matches.get(index);}
+	private HashMap<Integer,List<Match>>matchesByObjs=new HashMap<>();
+		public List<Match>getMatchsByObj(Objeto obj){return matchesByObjs.get(obj.getIndex());}
+	public void add(Match match){
+		final Objeto obj=match.getObjeto();
+		if(!matchesByObjs.containsKey(obj.getIndex())){
+			matchesByObjs.put(obj.getIndex(),new ArrayList<>());
 		}
-	private int size;
-		public int size(){return size;}
+		matches.add(match);
+		matchesByObjs.get(obj.getIndex()).add(match);
+	}
+	public void del(Objeto obj){
+		if(matchesByObjs.get(obj.getIndex())!=null){
+			final List<Match>matchesRemoved=matchesByObjs.remove(obj.getIndex());
+			for(Match match:matchesRemoved)matches.remove(match);
+		}
+	}
+	public int totalObjs(){return matchesByObjs.size();}
+	public int totaMatches(){return matches.size();}
 //SEARCH
 	private Pattern regex;
 //	private boolean frente;
@@ -49,7 +69,6 @@ public class MatchMade{
 //	private boolean wholeWord;
 	private boolean diffMaiuscMinusc;
 	public void search(String termo,boolean frente,boolean onlySelected,boolean wholeWord,boolean diffMaiuscMinusc){
-		tree.getActions().unSelectAll();
 //		this.frente=frente;
 //		this.onlySelected=onlySelected;
 //		this.wholeWord=wholeWord;
@@ -72,35 +91,34 @@ public class MatchMade{
 			searchInObj(obj);
 		}
 	}
-	private void searchInObj(Objeto obj){
-		switch(obj.getTipo()){
-			case MODULO:default:
-				final Modulo mod=(Modulo)obj;
-				final String modTitulo=(diffMaiuscMinusc?mod.getTitle():mod.getTitle().toLowerCase());
-				searchInObjTexto(mod,true,modTitulo);
-				final String modTexto=(diffMaiuscMinusc?mod.getText():mod.getText().toLowerCase());
-				searchInObjTexto(mod,false,modTexto);
-			break;
-			case CONEXAO:
-				final Conexao cox=(Conexao)obj;
-				final String coxTexto=(diffMaiuscMinusc?cox.getText():cox.getText().toLowerCase());
-				searchInObjTexto(cox,false,coxTexto);
-			break;
-			case NODULO:break;
-			case SEGMENTO:break;
+		private void searchInObj(Objeto obj){
+			switch(obj.getTipo()){
+				case MODULO:default:
+					final Modulo mod=(Modulo)obj;
+					final String modTitulo=(diffMaiuscMinusc?mod.getTitle():mod.getTitle().toLowerCase());
+					searchInObjTexto(mod,true,modTitulo);
+					final String modTexto=(diffMaiuscMinusc?mod.getText():mod.getText().toLowerCase());
+					searchInObjTexto(mod,false,modTexto);
+				break;
+				case CONEXAO:
+					final Conexao cox=(Conexao)obj;
+					final String coxTexto=(diffMaiuscMinusc?cox.getText():cox.getText().toLowerCase());
+					searchInObjTexto(cox,false,coxTexto);
+				break;
+				case NODULO:break;
+				case SEGMENTO:break;
+			}
 		}
-	}
-	private void searchInObjTexto(Objeto obj,boolean isTitulo,String texto){
-		final Matcher match=regex.matcher(texto);
-		if(match.find()){			//VERIFICA TÍTULO
-			tree.select(obj);
-			do{
-				add(new Match(obj,!isTitulo,match.start(),match.end()));
-			}while(match.find());
-		}
-	}
-	public void research(Objeto obj){searchInObj(obj);}	//APENAS PARA RENOMEAR
-	public void researchText(Objeto obj,boolean isTitulo,String texto){searchInObjTexto(obj,isTitulo,texto);}	//APENAS PARA RENOMEAR
+			private void searchInObjTexto(Objeto obj,boolean isTitulo,String texto){
+				final Matcher match=regex.matcher(texto);
+				if(match.find()){
+					do{
+						add(new Match(obj,!isTitulo,match.start(),match.end()));
+					}while(match.find());
+				}
+			}
+				public void research(Objeto obj){searchInObj(obj);}	//APENAS PARA CONTEXTUALIZAR
+				public void researchText(Objeto obj,boolean isTitulo,String texto){searchInObjTexto(obj,isTitulo,texto);}	//APENAS PARA CONTEXTUALIZAR
 //MAIN
 	public MatchMade(Tree tree){this.tree=tree;}
 //FUNCS

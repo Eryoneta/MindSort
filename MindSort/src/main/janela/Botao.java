@@ -37,6 +37,7 @@ public class Botao{
 			this.state=state;
 			draw();
 		}
+		private State getState(){return state;}
 //BORDA
 	private Borda borda;
 		public Borda getBorda(){return borda;}
@@ -132,7 +133,7 @@ public class Botao{
 		final Window janela=borda.getJanela();
 		janela.addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent m){
-				if(Cursor.match(m,Cursor.LEFT))switch(state){
+				if(Cursor.match(m,Cursor.LEFT))switch(getState()){
 					case INACTIVE:default:break;
 					case HOVERED:
 						setState(State.ACTIVE);
@@ -142,7 +143,7 @@ public class Botao{
 				}
 			}
 			public void mouseReleased(MouseEvent m){
-				if(Cursor.match(m,Cursor.LEFT))switch(state){
+				if(Cursor.match(m,Cursor.LEFT))switch(getState()){
 					case INACTIVE:default:break;
 					case HOVERED:break;
 					case ACTIVE:
@@ -157,17 +158,17 @@ public class Botao{
 		});
 		janela.addMouseMotionListener(new MouseAdapter(){
 			public void mouseMoved(MouseEvent m){
-				switch(state){
+				switch(getState()){
 					case INACTIVE:default:
 						if(getBounds().contains(m.getPoint())){
 							setState(State.HOVERED);
-							setPopup(true);
+							showPopup(true);
 						}
 					break;
 					case HOVERED:
 						if(!getBounds().contains(m.getPoint())){
 							setState(State.INACTIVE);
-							setPopup(false);
+							showPopup(false);
 						}
 					break;
 					case ACTIVE:break;
@@ -175,19 +176,19 @@ public class Botao{
 				}
 			}
 			public void mouseDragged(MouseEvent m){
-				if(Cursor.match(m,Cursor.LEFT))switch(state){
+				if(Cursor.match(m,Cursor.LEFT))switch(getState()){
 					case INACTIVE:default:break;
 					case HOVERED:break;
 					case ACTIVE:
 						if(!getBounds().contains(m.getPoint())){
 							setState(State.DRAGGED);
-							setPopup(false);
+							showPopup(false);
 						}
 					break;
 					case DRAGGED:
 						if(getBounds().contains(m.getPoint())){
 							setState(State.ACTIVE);
-							setPopup(true);
+							showPopup(true);
 						}
 					break;
 				}
@@ -195,9 +196,9 @@ public class Botao{
 		});
 	}
 //FUNCS
-	private void setPopup(boolean open){
+	private void showPopup(boolean show){
 		if(popup==null)return;
-		if(open){
+		if(show){
 			final Point mouseScreen=MouseInfo.getPointerInfo().getLocation();
 			popup.show(borda.getJanela(),mouseScreen.x-borda.getJanela().getX(),mouseScreen.y-borda.getJanela().getY()+getHeight());
 		}else popup.setVisible(false);
