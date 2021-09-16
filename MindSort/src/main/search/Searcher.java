@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -23,8 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
-
-import main.MindSort;
+import main.MindSortUI;
 import element.tree.objeto.Objeto;
 import element.tree.Tree;
 @SuppressWarnings("serial")
@@ -49,12 +47,12 @@ public class Searcher{
 	}
 		public void updateInterface(){
 			if(dialog!=null)dialog.dispose();
-			procurarTxt=MindSort.getLang().get("M_Menu_P_P","Find");
-			listarTxt=MindSort.getLang().get("M_Menu_P_L","List");
-			proximoTxt=MindSort.getLang().get("M_Menu_P_L_P","Next");
-			anteriorTxt=MindSort.getLang().get("M_Menu_P_L_A","Previous");
+			procurarTxt=MindSortUI.getLang().get("M_Menu_P_P","Find");
+			listarTxt=MindSortUI.getLang().get("M_Menu_P_L","List");
+			proximoTxt=MindSortUI.getLang().get("M_Menu_P_L_P","Next");
+			anteriorTxt=MindSortUI.getLang().get("M_Menu_P_L_A","Previous");
 			dialog=new JDialog(tree.getPainel().getJanela()){{
-				setTitle(MindSort.getLang().get("M_Menu_P_Ti","Find"));
+				setTitle(MindSortUI.getLang().get("M_Menu_P_Ti","Find"));
 				setSize(300,350);
 				setMinimumSize(getSize());
 				setLocationRelativeTo(tree.getPainel().getJanela());
@@ -66,7 +64,7 @@ public class Searcher{
 					});
 				}};
 				final ButtonGroup grupoDirecao=new ButtonGroup();
-				final JRadioButton frente=new JRadioButton(MindSort.getLang().get("M_Menu_P_Dir_F","Forward")){{	//FRENTE
+				final JRadioButton frente=new JRadioButton(MindSortUI.getLang().get("M_Menu_P_Dir_F","Forward")){{	//FRENTE
 					grupoDirecao.add(this);
 					setSelected(true);
 					addItemListener(new ItemListener(){
@@ -75,7 +73,7 @@ public class Searcher{
 						}
 					});
 				}};
-				final JRadioButton atras=new JRadioButton(MindSort.getLang().get("M_Menu_P_Dir_T","Backward")){{	//ATRÁS
+				final JRadioButton atras=new JRadioButton(MindSortUI.getLang().get("M_Menu_P_Dir_T","Backward")){{	//ATRÁS
 					grupoDirecao.add(this);
 					addItemListener(new ItemListener(){
 						public void itemStateChanged(ItemEvent i){
@@ -84,32 +82,32 @@ public class Searcher{
 					});
 				}};
 				final ButtonGroup grupoEscopo=new ButtonGroup();
-				final JRadioButton tudo=new JRadioButton(MindSort.getLang().get("M_Menu_P_Es_T","All")){{		//TUDO
+				final JRadioButton tudo=new JRadioButton(MindSortUI.getLang().get("M_Menu_P_Es_T","All")){{		//TUDO
 					grupoEscopo.add(this);
 					setSelected(true);
 					addItemListener(new ItemListener(){
 						public void itemStateChanged(ItemEvent i){reset();}
 					});
 				}};
-				final JRadioButton onlySelected=new JRadioButton(MindSort.getLang().get("M_Menu_P_Es_S","Selected")){{	//APENAS SELECIONADOS
+				final JRadioButton onlySelected=new JRadioButton(MindSortUI.getLang().get("M_Menu_P_Es_S","Selected")){{	//APENAS SELECIONADOS
 					grupoEscopo.add(this);
 					addItemListener(new ItemListener(){
 						public void itemStateChanged(ItemEvent i){reset();}
 					});
 				}};
-				final JCheckBox wholeWord=new JCheckBox(MindSort.getLang().get("M_Menu_P_Op_P","Whole word")){{			//PALAVRAS INTEIRAS
+				final JCheckBox wholeWord=new JCheckBox(MindSortUI.getLang().get("M_Menu_P_Op_P","Whole word")){{			//PALAVRAS INTEIRAS
 					addItemListener(new ItemListener(){
 						public void itemStateChanged(ItemEvent i){reset();}
 					});
 				}};
-				final JCheckBox diffMaiuscMinusc=new JCheckBox(MindSort.getLang().get("M_Menu_P_Op_D","Case sensitive")){{	//DIFERENCIAR CAPITAL
+				final JCheckBox diffMaiuscMinusc=new JCheckBox(MindSortUI.getLang().get("M_Menu_P_Op_D","Case sensitive")){{	//DIFERENCIAR CAPITAL
 					addItemListener(new ItemListener(){
 						public void itemStateChanged(ItemEvent i){reset();}
 					});
 				}};
 				getContentPane().add(new JPanel(){{				//PAINEL SUPERIOR
 					setLayout(new GridLayout(1,2));
-					add(new JLabel(MindSort.getLang().get("M_Menu_P_Tx","Find:")){{					//PROCURAR
+					add(new JLabel(MindSortUI.getLang().get("M_Menu_P_Tx","Find:")){{					//PROCURAR
 						setHorizontalAlignment(JLabel.LEFT);
 						setHorizontalTextPosition(JLabel.LEFT);
 						setLabelFor(termo);
@@ -127,7 +125,7 @@ public class Searcher{
 							add(atras);										//ATRÁS
 							setBorder(BorderFactory.createCompoundBorder(
 									BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-											MindSort.getLang().get("M_Menu_P_Dir","Direction")),
+											MindSortUI.getLang().get("M_Menu_P_Dir","Direction")),
 									BorderFactory.createEmptyBorder(5,10,10,10)
 							));
 						}});
@@ -137,7 +135,7 @@ public class Searcher{
 							add(onlySelected);								//APENAS SELECIONADOS
 							setBorder(BorderFactory.createCompoundBorder(
 									BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-											MindSort.getLang().get("M_Menu_P_Es","Scope")),
+											MindSortUI.getLang().get("M_Menu_P_Es","Scope")),
 									BorderFactory.createEmptyBorder(5,10,10,10)
 							));
 						}});
@@ -148,14 +146,14 @@ public class Searcher{
 						add(diffMaiuscMinusc);								//DIFERENCIAR CAPITAL
 						setBorder(BorderFactory.createCompoundBorder(
 								BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-										MindSort.getLang().get("M_Menu_P_Op","Options")),
+										MindSortUI.getLang().get("M_Menu_P_Op","Options")),
 								BorderFactory.createEmptyBorder(5,10,10,10)
 						));
 					}});
 				}},BorderLayout.CENTER);
 				getContentPane().add(new JPanel(){{					//PAINEL INFERIOR
 					setLayout(new GridLayout(2,2));
-					add(destacar=new JButton(MindSort.getLang().get("M_Menu_P_D","Highlight")){{						//DESTACAR
+					add(destacar=new JButton(MindSortUI.getLang().get("M_Menu_P_D","Highlight")){{						//DESTACAR
 						addActionListener(new ActionListener(){
 							public void actionPerformed(ActionEvent a){
 								reset();
@@ -178,7 +176,7 @@ public class Searcher{
 						setHorizontalAlignment(JLabel.LEFT);
 						setHorizontalTextPosition(JLabel.LEFT);
 					}});
-					add(new JButton(MindSort.getLang().get("M_Menu_P_F","Close")){{							//FECHAR
+					add(new JButton(MindSortUI.getLang().get("M_Menu_P_F","Close")){{							//FECHAR
 						addActionListener(new ActionListener(){
 							public void actionPerformed(ActionEvent a){
 								dispensar();
@@ -196,25 +194,25 @@ public class Searcher{
 					public void windowClosed(WindowEvent w){}
 					public void windowActivated(WindowEvent w){}
 				});
-				tree.getTitulo().addEditorListener(new DocumentListener(){
+				tree.getUI().getTitulo().addEditorListener(new DocumentListener(){
 					public void removeUpdate(DocumentEvent d){run(d);}
 					public void insertUpdate(DocumentEvent d){run(d);}
 					public void changedUpdate(DocumentEvent d){run(d);}
 					private void run(DocumentEvent d){
-						if(tree.getTitulo().getObjeto()==null)return;
-						if(!tree.getTitulo().getObjeto().getTipo().is(Objeto.Tipo.MODULO))return;
+						if(tree.getUI().getTitulo().getObjeto()==null)return;
+						if(!tree.getUI().getTitulo().getObjeto().getTipo().is(Objeto.Tipo.MODULO))return;
 						try{
 							researchMatch(d.getDocument().getText(0,d.getDocument().getLength()));
 						}catch(BadLocationException erro){}
 					}
 				});
-				tree.getTexto().addEditorListener(new DocumentListener(){
+				tree.getUI().getTexto().addEditorListener(new DocumentListener(){
 					public void removeUpdate(DocumentEvent d){run(d);}
 					public void insertUpdate(DocumentEvent d){run(d);}
 					public void changedUpdate(DocumentEvent d){run(d);}
 					private void run(DocumentEvent d){
-						if(tree.getTexto().getObjeto()==null)return;
-						if(!tree.getTexto().getObjeto().getTipo().is(Objeto.Tipo.MODULO,Objeto.Tipo.CONEXAO))return;
+						if(tree.getUI().getTexto().getObjeto()==null)return;
+						if(!tree.getUI().getTexto().getObjeto().getTipo().is(Objeto.Tipo.MODULO,Objeto.Tipo.CONEXAO))return;
 						try{
 							researchMatch(d.getDocument().getText(0,d.getDocument().getLength()));
 						}catch(BadLocationException erro){}
@@ -256,15 +254,15 @@ public class Searcher{
 		if(match.isOnText()){	//DESTACA TEXTO
 			tree.select(match.getObjeto());
 			tree.draw();
-			tree.getTexto().requestFocus();
-			tree.getTexto().select(match.getSelectionStart(),match.getSelectionEnd());
+			tree.getUI().getTexto().requestFocus();
+			tree.getUI().getTexto().select(match.getSelectionStart(),match.getSelectionEnd());
 		}else{					//DESTACA TÍTULO
 			tree.select(match.getObjeto());
 			tree.getPainel().getJanela().requestFocus();	//FOCA A JANELA
 			tree.getActions().editTitulo();
 			tree.draw();
-			tree.getTitulo().requestFocus();				//FOCA O TÍTULO
-			tree.getTitulo().select(match.getSelectionStart(),match.getSelectionEnd());
+			tree.getUI().getTitulo().requestFocus();				//FOCA O TÍTULO
+			tree.getUI().getTitulo().select(match.getSelectionStart(),match.getSelectionEnd());
 		}
 	}
 	private void procurar(String termo,boolean frente,boolean onlySelected,boolean wholeWord,boolean diffMaiuscMinusc){
@@ -277,13 +275,13 @@ public class Searcher{
 		for(Match match:matches.getMatchs())tree.select(match.getObjeto());		//SELECIONA OS ACHADOS
 		final int size=matches.totaMatches();		//TOTAL DE INSTÂNCIAS ACHADAS
 		if(size==0){
-			resultado.setText(MindSort.getLang().get("M_Menu_P_P_NE","No encounter!"));
+			resultado.setText(MindSortUI.getLang().get("M_Menu_P_P_NE","No encounter!"));
 			Toolkit.getDefaultToolkit().beep();
 		}else if(size==1){
-			resultado.setText(size+MindSort.getLang().get("M_Menu_P_P_I"," instance found!"));
+			resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_P_I"," instance found!"));
 			listar(frente);				//IMEDIATAMENTE O SELECIONA, SENDO APENAS UM
 		}else{
-			resultado.setText(size+MindSort.getLang().get("M_Menu_P_P_Is"," instances found!"));
+			resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_P_Is"," instances found!"));
 		}
 		procurar.setText(listarTxt);	//PROCURAR -> LISTAR
 		tree.getPainel().getJanela().requestFocus();
@@ -300,12 +298,12 @@ public class Searcher{
 		for(Match match:matches.getMatchs())tree.select(match.getObjeto());		//SELECIONA OS ACHADOS
 		final int size=matches.totalObjs();			//TOTAL DE OBJS ACHADOS
 		if(size==0){
-			resultado.setText(MindSort.getLang().get("M_Menu_P_D_NR","No results!"));
+			resultado.setText(MindSortUI.getLang().get("M_Menu_P_D_NR","No results!"));
 			Toolkit.getDefaultToolkit().beep();
 		}else if(size==1){
-			resultado.setText(size+MindSort.getLang().get("M_Menu_P_D_O"," selected object!"));
+			resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_D_O"," selected object!"));
 		}else{
-			resultado.setText(size+MindSort.getLang().get("M_Menu_P_D_Os"," selected objects!"));
+			resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_D_Os"," selected objects!"));
 		}
 		procurar.setText(listarTxt);	//PROCURAR -> LISTAR
 		tree.getPainel().getJanela().requestFocus();
