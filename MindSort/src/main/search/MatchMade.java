@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import element.tree.Tree;
+import element.tree.main.Tree;
 import element.tree.objeto.Objeto;
 import element.tree.objeto.conexao.Conexao;
 import element.tree.objeto.modulo.Modulo;

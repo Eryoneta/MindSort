@@ -28,8 +28,8 @@ import element.tree.popup.color.CorPick;
 import main.janela.Janela;
 import element.tree.objeto.Objeto;
 import element.tree.propriedades.Cor;
-import element.tree.Tree;
-import element.tree.TreeUI;
+import element.tree.main.Tree;
+import element.tree.main.TreeUI;
 @SuppressWarnings("serial")
 public class MindSort{
 //MAIN(EXECUTE)
@@ -341,6 +341,7 @@ public class MindSort{
 			return false;
 		}
 	}
+//FOLDERS
 	public boolean updateIconFolder(){
 		final File icons=new File(System.getProperty("user.dir")+"/Icons");
 		if(!icons.exists())return false;

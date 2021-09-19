@@ -35,9 +35,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import element.Painel;
 import element.tree.ObjetoFocusListener;
-import element.tree.Tree;
-import element.tree.TreeST;
-import element.tree.TreeUI;
+import element.tree.main.Tree;
+import element.tree.main.TreeST;
+import element.tree.main.TreeUI;
 import element.tree.objeto.Objeto;
 import element.tree.objeto.conexao.Conexao;
 import element.tree.objeto.modulo.Modulo;
@@ -947,7 +947,7 @@ public class MindSortUI{
 				add(new Botao(menu,MindSortUI.getLang().get("M_Menu_P","Search")){{
 					setAction(new AbstractAction(){
 						public void actionPerformed(ActionEvent a){
-							searcher.updateInterface();
+							searcher.getUI().updateInterface();
 							searcher.chamar();
 						}
 					});
