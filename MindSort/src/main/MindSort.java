@@ -235,7 +235,7 @@ public class MindSort{
 					case "defaultWidth_TextWindow":		janelaTexto.setDialogDefaultWidth(getInteger(linha));						break;
 					case "defaultHeight_TextWindow":	janelaTexto.setDialogDefaultHeight(getInteger(linha));						break;
 				//FONTE
-					case "fonte":						getUI().setTreeFont(getFont(linha));												break;
+					case "fonte":						getUI().setTreeFont(getFont(linha));										break;
 				//FUNDO
 					case "showGrid":					getUI().getShowGridButton().doToggle(getBoolean(linha));					break;
 				//PALETA

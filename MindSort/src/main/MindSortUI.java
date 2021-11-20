@@ -997,6 +997,7 @@ public class MindSortUI{
 					setBorder(BorderFactory.createEmptyBorder(5,5,5,0));
 					setBackground(Cor.WHITE);
 					setViewportView(mind.getTree().getUI().getTexto());
+					setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 					removeMouseWheelListener(getMouseWheelListeners()[0]);
 					addMouseWheelListener(new MouseWheelListener(){
 						public void mouseWheelMoved(MouseWheelEvent w){
@@ -1106,11 +1107,10 @@ public class MindSortUI{
 	private Texto notesTexto;
 	private JFrame janelaNotes;
 		private void buildJanelaNotes(){
-			notesTexto=new Texto(){{
-				setFont(TreeUI.getFonte());
-				setForeground(TreeUI.Fonte.DARK);
-				setLineWrappable(true);
-			}};
+			notesTexto=new Texto();
+			notesTexto.setFont(TreeUI.getFonte());
+			notesTexto.setForeground(TreeUI.Fonte.DARK);
+			notesTexto.setLineWrappable(true);
 			janelaNotes=new JFrame(){{
 				setMinimumSize(new Dimension(180,180));
 				setBackground(Cor.WHITE);
@@ -1122,6 +1122,7 @@ public class MindSortUI{
 					setBorder(BorderFactory.createEmptyBorder(5,5,5,0));
 					setBackground(Cor.WHITE);
 					setViewportView(notesTexto);
+					setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 					removeMouseWheelListener(getMouseWheelListeners()[0]);
 					addMouseWheelListener(new MouseWheelListener(){
 						public void mouseWheelMoved(MouseWheelEvent w){

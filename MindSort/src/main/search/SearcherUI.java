@@ -189,7 +189,7 @@ public class SearcherUI{
 				public void windowClosed(WindowEvent w){}
 				public void windowActivated(WindowEvent w){}
 			});
-			searcher.tree.getUI().getTitulo().addEditorListener(new DocumentListener(){
+			searcher.tree.getUI().getTitulo().getDocument().addDocumentListener(new DocumentListener(){
 				public void removeUpdate(DocumentEvent d){run(d);}
 				public void insertUpdate(DocumentEvent d){run(d);}
 				public void changedUpdate(DocumentEvent d){run(d);}
@@ -201,7 +201,7 @@ public class SearcherUI{
 					}catch(BadLocationException erro){}
 				}
 			});
-			searcher.tree.getUI().getTexto().addEditorListener(new DocumentListener(){
+			searcher.tree.getUI().getTexto().getDocument().addDocumentListener(new DocumentListener(){
 				public void removeUpdate(DocumentEvent d){run(d);}
 				public void insertUpdate(DocumentEvent d){run(d);}
 				public void changedUpdate(DocumentEvent d){run(d);}
