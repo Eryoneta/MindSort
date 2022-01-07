@@ -1205,6 +1205,7 @@ public class MindSortUI{
 //FUNCS
 	public void setTreeFont(Font fonte){
 		mind.getTree().getUI().setFonte(fonte);
+		janelaTexto.setFont(fonte);
 		notesTexto.setFont(fonte);
 	}
 	private void updateLang(){

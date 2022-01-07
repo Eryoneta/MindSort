@@ -181,6 +181,7 @@ public class JanelaVidro extends JDialog{
 		imagemEdit2D.fillRect(innerArea.x,innerArea.y,innerArea.width,innerArea.height);
 	//COMPONENTES
 		if(!getBorda().isDragging()){
+			imagemEdit2D.setFont(getFont());
 			super.paintComponents(imagemEdit2D);
 		}
 	//END

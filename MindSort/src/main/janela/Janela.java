@@ -2,6 +2,7 @@ package main.janela;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -219,6 +220,11 @@ public class Janela{
 	}
 	public void updateLang(){
 		janelaVidro.updateLang();
+	}
+	public void setFont(Font fonte){
+		janela.setFont(fonte);
+		janelaVidro.setFont(fonte);
+		janelaVidro.repaint();
 	}
 	public void addWindowListenerOnClosed(Runnable action){
 		janela.addWindowListener(new WindowListener(){

@@ -121,6 +121,7 @@ public class MindSort{
 							MindSortUI.Options.ERRO);
 				}
 				getUI().getJanela().setTitle(mind.getName()+" - "+link);
+				getUI().setTreeFont(TreeUI.getFonte());
 				tree.getActions().setFocusOn(new Objeto[]{Tree.getMestre()});
 				tree.setEnabled(true);
 				tree.setVisible(true);
