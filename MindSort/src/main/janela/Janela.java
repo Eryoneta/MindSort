@@ -49,6 +49,9 @@ public class Janela{
 				janelaVidro.remove(getPainel());
 				janela.add(getPainel());
 			}
+//			final boolean isVisible=janela.isVisible();
+//			janela.setVisible(janelaVidro.isVisible());
+//			janelaVidro.setVisible(isVisible);
 			janela.setVisible(!locked);
 			janelaVidro.setVisible(locked);
 			isLocked=locked;
@@ -232,10 +235,10 @@ public class Janela{
 			public void windowIconified(WindowEvent w){}
 			public void windowDeiconified(WindowEvent w){}
 			public void windowDeactivated(WindowEvent w){}
-			public void windowClosing(WindowEvent w){}
-			public void windowClosed(WindowEvent w){
+			public void windowClosing(WindowEvent w){
 				action.run();
 			}
+			public void windowClosed(WindowEvent w){}
 			public void windowActivated(WindowEvent w){}
 		});
 		janelaVidro.addWindowListener(new WindowListener(){

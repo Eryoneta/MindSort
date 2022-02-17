@@ -121,13 +121,9 @@ public class MindSortUI{
 				});
 				addComponentListener(new ComponentAdapter(){
 					public void componentResized(ComponentEvent r){
-						if(!janela.isUndecorated())window.setSize(janela.getSize());
 						mind.getTree().setSize(janela.getWidth()-janela.getInsets().left-janela.getInsets().right,
 								janela.getHeight()-janela.getInsets().top-menu.getHeight()-janela.getInsets().bottom);
 						mind.getTree().draw();
-					}
-					public void componentMoved(ComponentEvent m){
-						if(!janela.isUndecorated())window.setLocation(janela.getLocation());
 					}
 				});
 				setDropTarget(new DropTarget(){
@@ -162,6 +158,7 @@ public class MindSortUI{
 					}
 				});
 			}};
+			window=janela.getBounds();
 		}
 			public void buildTree(Painel painel){
 				mind.setTree(new Tree(painel){{
@@ -614,13 +611,16 @@ public class MindSortUI{
 					add(fullscreen=new Toggle(menu,MindSortUI.getLang().get("M_Menu_Ex_T","Fullscreen")){{
 						setAction(new Runnable(){
 							private boolean isToSeparateText=false;
+							private boolean isToShowText=true;
 							public void run(){
 								fullscreen(fullscreen.isPressed());
 								if(fullscreen.isPressed()){
 									isToSeparateText=separateText.isPressed();
+									isToShowText=showTexto.isPressed();
 									separateText.doToggle(true);
 								}else{
 									separateText.doToggle(isToSeparateText);
+									showTexto.doToggle(isToShowText);
 								}
 								separateText.setEnabled(!fullscreen.isPressed());
 							}
@@ -1116,7 +1116,6 @@ public class MindSortUI{
 				setBackground(Cor.WHITE);
 				setBounds(janela.getX(),janela.getY(),350,300);
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				setAlwaysOnTop(true);
 				setIconImage(mind.getImage("Icone"));
 				add(new JScrollPane(){{
 					setBorder(BorderFactory.createEmptyBorder(5,5,5,0));
@@ -1190,6 +1189,7 @@ public class MindSortUI{
 		updateLang();
 		mind.updateIconFolder();
 		mind.getIniConfig();
+		window=janela.getBounds();
 		mind.getTree().clear();	//ATUALIZA O IDIOMA DOS MODS
 		getFullscreenButton().doToggle(getFullscreenButton().isPressed());
 		getSeparateTextButton().doToggle(getSeparateTextButton().isPressed());
@@ -1223,6 +1223,7 @@ public class MindSortUI{
 		if(fullscreen){
 			janela.setUndecorated(true);			//DEVE OCORRER ANTES DE RETIRAR O FUNDO
 			janela.setBackground(Cor.TRANSPARENTE);	//A JANELA DEVE SER DESBORDADA
+			window=janela.getBounds();
 			final Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 			janela.setBounds(0,0,screenSize.width,screenSize.height);
 		}else{

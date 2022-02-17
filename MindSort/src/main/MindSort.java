@@ -220,55 +220,59 @@ public class MindSort{
 		final Janela janelaTexto=getUI().getJanelaTexto();
 		if(iniLink.exists())try{
 			for(String linha:Files.readAllLines(iniLink.toPath(),StandardCharsets.UTF_8)){
-				final Matcher match=Pattern.compile("^\t{0,}([^=\n]+)=+").matcher(linha);
-				if(match.find())switch(match.group(1)){
-				//ÁREA DA JANELA
-					case "x_Window":					janela.setLocation(getInteger(linha),janela.getY());						break;
-					case "y_Window":					janela.setLocation(janela.getX(),getInteger(linha));						break;
-					case "width_Window":				janela.setSize(getInteger(linha),janela.getHeight());						break;
-					case "height_Window":				janela.setSize(janela.getWidth(),getInteger(linha));						break;
-				//ÁREA DA JANELA DO TEXTO
-					case "x_TextWindow":				janelaTexto.setLocation(getInteger(linha),janelaTexto.getY());				break;
-					case "y_TextWindow":				janelaTexto.setLocation(janelaTexto.getX(),getInteger(linha));				break;
-					case "width_TextWindow":			janelaTexto.setSize(getInteger(linha),janelaTexto.getHeight());				break;
-					case "height_TextWindow":			janelaTexto.setSize(janelaTexto.getWidth(),getInteger(linha));				break;
-				//ÁREA DO DIALOG DO TEXTO
-					case "defaultWidth_TextWindow":		janelaTexto.setDialogDefaultWidth(getInteger(linha));						break;
-					case "defaultHeight_TextWindow":	janelaTexto.setDialogDefaultHeight(getInteger(linha));						break;
-				//FONTE
-					case "fonte":						getUI().setTreeFont(getFont(linha));										break;
-				//FUNDO
-					case "showGrid":					getUI().getShowGridButton().doToggle(getBoolean(linha));					break;
-				//PALETA
-					case "cor_0_0":						CorPick.PALETA_DEFAULT[0][0]=getCor(linha);									break;
-					case "cor_0_1":						CorPick.PALETA_DEFAULT[0][1]=getCor(linha);									break;
-					case "cor_0_2":						CorPick.PALETA_DEFAULT[0][2]=getCor(linha);									break;
-					case "cor_0_3":						CorPick.PALETA_DEFAULT[0][3]=getCor(linha);									break;
-					case "cor_0_4":						CorPick.PALETA_DEFAULT[0][4]=getCor(linha);									break;
-					case "cor_0_5":						CorPick.PALETA_DEFAULT[0][5]=getCor(linha);									break;
-					case "cor_1_0":						CorPick.PALETA_DEFAULT[1][0]=getCor(linha);									break;
-					case "cor_1_1":						CorPick.PALETA_DEFAULT[1][1]=getCor(linha);									break;
-					case "cor_1_2":						CorPick.PALETA_DEFAULT[1][2]=getCor(linha);									break;
-					case "cor_1_3":						CorPick.PALETA_DEFAULT[1][3]=getCor(linha);									break;
-					case "cor_1_4":						CorPick.PALETA_DEFAULT[1][4]=getCor(linha);									break;
-					case "cor_1_5":						CorPick.PALETA_DEFAULT[1][5]=getCor(linha);									break;
-					case "cor_2_2":						CorPick.PALETA_DEFAULT[2][2]=getCor(linha);									break;
-					case "cor_2_3":						CorPick.PALETA_DEFAULT[2][3]=getCor(linha);									break;
-					case "cor_2_4":						CorPick.PALETA_DEFAULT[2][4]=getCor(linha);									break;
-					case "cor_2_5":						CorPick.PALETA_DEFAULT[2][5]=getCor(linha);									break;
-					case "cor_3_2":						CorPick.PALETA_DEFAULT[3][2]=getCor(linha);									break;
-					case "cor_3_3":						CorPick.PALETA_DEFAULT[3][3]=getCor(linha);									break;
-					case "cor_3_4":						CorPick.PALETA_DEFAULT[3][4]=getCor(linha);									break;
-					case "cor_3_5":						CorPick.PALETA_DEFAULT[3][5]=getCor(linha);									break;
-				//TEXTO
-					case "lineWrap":					getUI().getLineWrapButton().doToggle(getBoolean(linha));					break;
-					case "showAllChars":				getUI().getShowAllCharsButton().doToggle(getBoolean(linha));				break;
-					case "separarTextWindow":			getUI().getSeparateTextButton().doToggle(getBoolean(linha));				break;
-					case "autoFocarTextWindow":			getUI().getAutoFocusTextButton().doToggle(getBoolean(linha));				break;
-				//LIMITES
-					case "objetosLimite":				tree.setObjetosLimite(getInteger(linha));									break;
-					case "undoRedoLimite":				tree.getUndoRedoManager().setDoLimite(getInteger(linha));					break;
-					case "transparenciaNivel":			janelaTexto.getTransparentInstance().setTransparencia(getInteger(linha));	break;
+				final Matcher match=Pattern.compile("^\t*([^=\n]+)=(.*)").matcher(linha);
+				if(match.find()){
+					final String var=match.group(1);
+					final String valor=match.group(2);
+						switch(var){
+					//ÁREA DA JANELA
+						case "x_Window":					janela.setLocation(getInteger(valor),janela.getY());						break;
+						case "y_Window":					janela.setLocation(janela.getX(),getInteger(valor));						break;
+						case "width_Window":				janela.setSize(getInteger(valor),janela.getHeight());						break;
+						case "height_Window":				janela.setSize(janela.getWidth(),getInteger(valor));						break;
+					//ÁREA DA JANELA DO TEXTO
+						case "x_TextWindow":				janelaTexto.setLocation(getInteger(valor),janelaTexto.getY());				break;
+						case "y_TextWindow":				janelaTexto.setLocation(janelaTexto.getX(),getInteger(valor));				break;
+						case "width_TextWindow":			janelaTexto.setSize(getInteger(valor),janelaTexto.getHeight());				break;
+						case "height_TextWindow":			janelaTexto.setSize(janelaTexto.getWidth(),getInteger(valor));				break;
+					//ÁREA DO DIALOG DO TEXTO
+						case "defaultWidth_TextWindow":		janelaTexto.setDialogDefaultWidth(getInteger(valor));						break;
+						case "defaultHeight_TextWindow":	janelaTexto.setDialogDefaultHeight(getInteger(valor));						break;
+					//FONTE
+						case "fonte":						getUI().setTreeFont(getFont(valor));										break;
+					//FUNDO
+						case "showGrid":					getUI().getShowGridButton().doToggle(getBoolean(valor));					break;
+					//PALETA
+						case "cor_0_0":						CorPick.PALETA_DEFAULT[0][0]=getCor(valor);									break;
+						case "cor_0_1":						CorPick.PALETA_DEFAULT[0][1]=getCor(valor);									break;
+						case "cor_0_2":						CorPick.PALETA_DEFAULT[0][2]=getCor(valor);									break;
+						case "cor_0_3":						CorPick.PALETA_DEFAULT[0][3]=getCor(valor);									break;
+						case "cor_0_4":						CorPick.PALETA_DEFAULT[0][4]=getCor(valor);									break;
+						case "cor_0_5":						CorPick.PALETA_DEFAULT[0][5]=getCor(valor);									break;
+						case "cor_1_0":						CorPick.PALETA_DEFAULT[1][0]=getCor(valor);									break;
+						case "cor_1_1":						CorPick.PALETA_DEFAULT[1][1]=getCor(valor);									break;
+						case "cor_1_2":						CorPick.PALETA_DEFAULT[1][2]=getCor(valor);									break;
+						case "cor_1_3":						CorPick.PALETA_DEFAULT[1][3]=getCor(valor);									break;
+						case "cor_1_4":						CorPick.PALETA_DEFAULT[1][4]=getCor(valor);									break;
+						case "cor_1_5":						CorPick.PALETA_DEFAULT[1][5]=getCor(valor);									break;
+						case "cor_2_2":						CorPick.PALETA_DEFAULT[2][2]=getCor(valor);									break;
+						case "cor_2_3":						CorPick.PALETA_DEFAULT[2][3]=getCor(valor);									break;
+						case "cor_2_4":						CorPick.PALETA_DEFAULT[2][4]=getCor(valor);									break;
+						case "cor_2_5":						CorPick.PALETA_DEFAULT[2][5]=getCor(valor);									break;
+						case "cor_3_2":						CorPick.PALETA_DEFAULT[3][2]=getCor(valor);									break;
+						case "cor_3_3":						CorPick.PALETA_DEFAULT[3][3]=getCor(valor);									break;
+						case "cor_3_4":						CorPick.PALETA_DEFAULT[3][4]=getCor(valor);									break;
+						case "cor_3_5":						CorPick.PALETA_DEFAULT[3][5]=getCor(valor);									break;
+					//TEXTO
+						case "lineWrap":					getUI().getLineWrapButton().doToggle(getBoolean(valor));					break;
+						case "showAllChars":				getUI().getShowAllCharsButton().doToggle(getBoolean(valor));				break;
+						case "separarTextWindow":			getUI().getSeparateTextButton().doToggle(getBoolean(valor));				break;
+						case "autoFocarTextWindow":			getUI().getAutoFocusTextButton().doToggle(getBoolean(valor));				break;
+					//LIMITES
+						case "objetosLimite":				tree.setObjetosLimite(getInteger(valor));									break;
+						case "undoRedoLimite":				tree.getUndoRedoManager().setDoLimite(getInteger(valor));					break;
+						case "transparenciaNivel":			janelaTexto.getTransparentInstance().setTransparencia(getInteger(valor));	break;
+					}
 				}
 			}
 		}catch(IOException erro){
@@ -279,20 +283,13 @@ public class MindSort{
 		}
 		return true;
 	}
-		private String getString(String linha){return linha.substring(linha.indexOf("=")+1,linha.length());}
-		private int getInteger(String linha){return Integer.parseInt(getString(linha));}
-		private Font getFont(String linha){
-			String[]fonte=getString(linha).split(",");
+		private int getInteger(String valor){return Integer.parseInt(valor);}
+		private Font getFont(String valor){
+			final String[]fonte=valor.split(",");
 			return new Font(fonte[0],Integer.parseInt(fonte[1]),Integer.parseInt(fonte[2]));
 		}
-		private Cor getCor(String linha){
-			final String corHex=getString(linha);
-			return new Cor(Integer.valueOf(corHex.substring(1,3),16),Integer.valueOf(corHex.substring(3,5),16),Integer.valueOf(corHex.substring(5,7),16));
-		}
-		private boolean getBoolean(String linha){
-			final String bool=getString(linha);
-			return(bool.equals("true")?true:bool.equals("false")?false:null);
-		}
+		private Cor getCor(String valor){return new Cor(valor);}
+		private boolean getBoolean(String valor){return Boolean.parseBoolean(valor);}
 	public boolean setConfigIni(){
 		final File link=new File(System.getProperty("user.dir")+"/"+ini);
 		final JFrame janela=getUI().getJanela();
