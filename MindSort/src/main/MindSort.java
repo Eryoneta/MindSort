@@ -40,6 +40,7 @@ public class MindSort{
 //LINK
 	private File link=null;
 		public File getFileLink(){return link;}
+		public void setFileLink(File link){this.link=link;}
 //TREE
 	private Tree tree;
 		public Tree getTree(){return tree;}
@@ -89,17 +90,16 @@ public class MindSort{
 		if(mind==null)return;
 		if(!mind.toString().endsWith(".mind"))mind=new File(mind+".mind");
 		try{
-			final PrintWriter writer=new PrintWriter(this.link=mind,"UTF-8");
-			writer.println("<mind fontName=\""+TreeUI.getFonte().getName()+"\" fontSize=\""+TreeUI.getFonte().getSize()+"\" fontStyle=\""+TreeUI.getFonte().getStyle()+"\">");
-			writer.println("	<mod border=\"0\" color=\"(0,255,255)\" icons=\"\" title=\""+TreeUI.getLang().get("T_M","New Mind Map")+"\" x=\"0\" y=\"0\"><text/></mod>");
-			writer.println("</mind>");
-			writer.close();
+			tree.clear();
+			tree.getActions().setFocusOn(new Objeto[]{Tree.getMestre()});
+			setFileLink(mind);
+			salvar(mind);
 		}catch(Exception erro){
 			MindSortUI.mensagem(
 					MindSortUI.getLang().get("M_Err3","Error: Couldn't create .mind file!")+"\n"+erro,
 					MindSortUI.Options.ERRO);
 		}
-		getUI().getJanela().setTitle(mind.getName()+" - "+link);
+		getUI().getJanela().setTitle(mind.getName()+" - "+getFileLink());
 	}
 //ABRIR
 	public void abrir(File mind){
@@ -112,7 +112,8 @@ public class MindSort{
 		new Thread(new Runnable(){ 
 			public void run(){
 				try{
-					final Document tags=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(link=mind);
+					setFileLink(mind);
+					final Document tags=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(getFileLink());
 					final Element mindTag=tags.getDocumentElement();
 					tree.addTree(mindTag,true);
 				}catch(Exception erro){
@@ -120,7 +121,7 @@ public class MindSort{
 							MindSortUI.getLang().get("M_Err4","Error: Couldn't open .mind file!")+"\n"+erro,
 							MindSortUI.Options.ERRO);
 				}
-				getUI().getJanela().setTitle(mind.getName()+" - "+link);
+				getUI().getJanela().setTitle(mind.getName()+" - "+getFileLink());
 				getUI().setTreeFont(TreeUI.getFonte());
 				tree.getActions().setFocusOn(new Objeto[]{Tree.getMestre()});
 				tree.setEnabled(true);
@@ -172,10 +173,10 @@ public class MindSort{
 				MindSortUI.getLang().get("M_Menu_F_S_Ti","Save .mind"),
 				JOptionPane.YES_NO_CANCEL_OPTION)){
 			case JOptionPane.YES_OPTION:
-				if(link==null)novo(choose(
+				if(getFileLink()==null)novo(choose(
 						MindSortUI.getLang().get("M_Menu_F_S","Save"),
 						getImage("Salvar"),true));
-				salvar(link);
+				salvar(getFileLink());
 			break;
 			case JOptionPane.NO_OPTION:
 				getUI().getJanela().setTitle(getUI().getJanela().getTitle().substring(1));
