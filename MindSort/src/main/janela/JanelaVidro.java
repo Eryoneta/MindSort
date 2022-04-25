@@ -5,11 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-
-import main.MindSort;
+import main.MindSortUI;
 @SuppressWarnings("serial")
 public class JanelaVidro extends JDialog{
 //BORDA
@@ -24,7 +22,7 @@ public class JanelaVidro extends JDialog{
 		});
 		final int size=Borda.TOP_WIDTH-Borda.SHADOW;
 		setSize(size,size);
-		setLegenda(MindSort.getLang().get("M_Tx_F","Close"));
+		setLegenda(MindSortUI.getLang().get("M_Tx_F","Close"));
 		setTitulo("✕");
 		setVisible(true);
 	}};
@@ -32,7 +30,7 @@ public class JanelaVidro extends JDialog{
 	private Botao SMin=new Botao(borda){{
 		final int size=Borda.TOP_WIDTH-Borda.SHADOW;
 		setSize(size*2,size);
-		setLegenda(MindSort.getLang().get("M_Tx_Mi","Minimal"));
+		setLegenda(MindSortUI.getLang().get("M_Tx_Mi","Minimal"));
 		setTitulo("□");
 		getCores().setBackgroundOnHover(new Color(100,100,100));
 		getCores().setBackgroundOnActive(new Color(118,118,117));
@@ -42,7 +40,7 @@ public class JanelaVidro extends JDialog{
 	private Botao SMed=new Botao(borda){{
 		final int size=Borda.TOP_WIDTH-Borda.SHADOW;
 		setSize(size*2,size);
-		setLegenda(MindSort.getLang().get("M_Tx_Me","Medium"));
+		setLegenda(MindSortUI.getLang().get("M_Tx_Me","Medium"));
 		setTitulo("◨");
 		getCores().setBackgroundOnHover(new Color(100,100,100));
 		getCores().setBackgroundOnActive(new Color(118,118,117));
@@ -52,7 +50,7 @@ public class JanelaVidro extends JDialog{
 	private Botao SMax=new Botao(borda){{
 		final int size=Borda.TOP_WIDTH-Borda.SHADOW;
 		setSize(size*2,size);
-		setLegenda(MindSort.getLang().get("M_Tx_Ma","Maximus"));
+		setLegenda(MindSortUI.getLang().get("M_Tx_Ma","Maximus"));
 		setTitulo("■");
 		getCores().setBackgroundOnHover(new Color(100,100,100));
 		getCores().setBackgroundOnActive(new Color(118,118,117));
@@ -158,10 +156,10 @@ public class JanelaVidro extends JDialog{
 		return newBounds;
 	}
 	public void updateLang(){
-		X.setLegenda(MindSort.getLang().get("M_Tx_F","Close"));
-		SMin.setLegenda(MindSort.getLang().get("M_Tx_Mi","Minimal"));
-		SMed.setLegenda(MindSort.getLang().get("M_Tx_Me","Medium"));
-		SMax.setLegenda(MindSort.getLang().get("M_Tx_Ma","Maximus"));
+		X.setLegenda(MindSortUI.getLang().get("M_Tx_F","Close"));
+		SMin.setLegenda(MindSortUI.getLang().get("M_Tx_Mi","Minimal"));
+		SMed.setLegenda(MindSortUI.getLang().get("M_Tx_Me","Medium"));
+		SMax.setLegenda(MindSortUI.getLang().get("M_Tx_Ma","Maximus"));
 	}
 	private void setSizeIcons(){
 		if(getOwner().getWidth()>getOwner().getHeight()){//HORIZONTAL
@@ -183,6 +181,7 @@ public class JanelaVidro extends JDialog{
 		imagemEdit2D.fillRect(innerArea.x,innerArea.y,innerArea.width,innerArea.height);
 	//COMPONENTES
 		if(!getBorda().isDragging()){
+			imagemEdit2D.setFont(getFont());
 			super.paintComponents(imagemEdit2D);
 		}
 	//END

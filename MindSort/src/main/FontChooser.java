@@ -42,8 +42,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
-
-import main.MindSort.Options;
 @SuppressWarnings({"serial","rawtypes","unchecked"})
 public class FontChooser extends JComponent{
 //RESPOSTAS
@@ -122,7 +120,7 @@ public class FontChooser extends JComponent{
 						setLayout(new BorderLayout());
 						setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 						setPreferredSize(new Dimension(180,130));
-						add(new JLabel(MindSort.getLang().get("M_Menu_C_F_N","Name")){{
+						add(new JLabel(MindSortUI.getLang().get("M_Menu_C_F_N","Name")){{
 							setHorizontalAlignment(JLabel.LEFT);
 							setHorizontalTextPosition(JLabel.LEFT);
 							setLabelFor(getNomeTexto());
@@ -145,10 +143,10 @@ public class FontChooser extends JComponent{
 		Font.PLAIN,Font.BOLD,Font.ITALIC,Font.BOLD|Font.ITALIC
 	};
 	private static final String[]ESTILOS_OPTIONS=new String[]{
-		MindSort.getLang().get("M_Menu_C_F_S_R","Plain"),
-		MindSort.getLang().get("M_Menu_C_F_S_B","Bold"),
-		MindSort.getLang().get("M_Menu_C_F_S_I","Italic"),
-		MindSort.getLang().get("M_Menu_C_F_S_BI","Bold and Italic")
+		MindSortUI.getLang().get("M_Menu_C_F_S_R","Plain"),
+		MindSortUI.getLang().get("M_Menu_C_F_S_B","Bold"),
+		MindSortUI.getLang().get("M_Menu_C_F_S_I","Italic"),
+		MindSortUI.getLang().get("M_Menu_C_F_S_BI","Bold and Italic")
 	};
 	//TEXTO DO ESTILO SELECIONADO
 		private JTextField estiloTexto;
@@ -197,7 +195,7 @@ public class FontChooser extends JComponent{
 						setLayout(new BorderLayout());
 						setPreferredSize(new Dimension(140,130));
 						setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-						add(new JLabel(MindSort.getLang().get("M_Menu_C_F_S","Style:")){{
+						add(new JLabel(MindSortUI.getLang().get("M_Menu_C_F_S","Style:")){{
 							setHorizontalAlignment(JLabel.LEFT);
 							setHorizontalTextPosition(JLabel.LEFT);
 							setLabelFor(getEstiloTexto());
@@ -250,7 +248,7 @@ public class FontChooser extends JComponent{
 			public int getSelectedTamanho(){
 				int fontSize=1;
 				String fontSizeString=getTamanhoTexto().getText();
-				while(true){
+				while(true){	//TODO: PARA QUE SERVE???
 					try{
 						fontSize=Integer.parseInt(fontSizeString);
 						break;
@@ -280,7 +278,7 @@ public class FontChooser extends JComponent{
 						setLayout(new BorderLayout());
 						setPreferredSize(new Dimension(70,130));
 						setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-						add(new JLabel(MindSort.getLang().get("M_Menu_C_F_T","Size:")){{
+						add(new JLabel(MindSortUI.getLang().get("M_Menu_C_F_T","Size:")){{
 							setHorizontalAlignment(JLabel.LEFT);
 							setHorizontalTextPosition(JLabel.LEFT);
 							setLabelFor(getTamanhoTexto());
@@ -318,7 +316,7 @@ public class FontChooser extends JComponent{
 					exemploPainel=new JPanel(){{
 						setLayout(new BorderLayout());
 						final Border titledBorder=BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-								MindSort.getLang().get("M_Menu_C_F_E","Example"));
+								MindSortUI.getLang().get("M_Menu_C_F_E","Example"));
 						final Border empty=BorderFactory.createEmptyBorder(5,10,10,10);
 						final Border border=BorderFactory.createCompoundBorder(titledBorder,empty);
 						setBorder(border);
@@ -406,9 +404,9 @@ public class FontChooser extends JComponent{
 				final Document doc=d.getDocument();
 				texto=doc.getText(0,doc.getLength());
 			}catch(BadLocationException erro){
-				MindSort.mensagem(
-						MindSort.getLang().get("M_Err9","Error: Cannot accept value!")+"\n"+erro,
-						Options.ERRO);
+				MindSortUI.mensagem(
+						MindSortUI.getLang().get("M_Err9","Error: Cannot accept value!")+"\n"+erro,
+						MindSortUI.Options.ERRO);
 			}
 			if(texto.length()>0){
 				int index=lista.getNextMatch(texto,0,Position.Bias.Forward);
@@ -471,7 +469,7 @@ public class FontChooser extends JComponent{
 	}
 		protected JDialog createDialog(Component janela){
 			final Frame frame=(janela instanceof Frame?(Frame)janela:(Frame)SwingUtilities.getAncestorOfClass(Frame.class,janela));
-			final JDialog dialog=new JDialog(frame,MindSort.getLang().get("M_Menu_C_F_SF","Select Font"),true);
+			final JDialog dialog=new JDialog(frame,MindSortUI.getLang().get("M_Menu_C_F_SF","Select Font"),true);
 			dialog.getContentPane().add(this,BorderLayout.CENTER);
 			dialog.getContentPane().add(new JPanel(){{
 				setLayout(new BorderLayout());
@@ -502,7 +500,7 @@ public class FontChooser extends JComponent{
 //BOTÃO OK
 	protected class DialogOKAction extends AbstractAction{
 	//VAR GLOBAIS
-		protected final String ACTION_NAME=MindSort.getLang().get("M_Menu_C_F_Ok","OK");
+		protected final String ACTION_NAME=MindSortUI.getLang().get("M_Menu_C_F_Ok","OK");
 		private JDialog dialog;
 	//MAIN
 		protected DialogOKAction(JDialog dialog){
@@ -520,7 +518,7 @@ public class FontChooser extends JComponent{
 //BOTÃO CANCELAR
 	protected class DialogCancelAction extends AbstractAction{
 	//VAR GLOBAIS
-		protected final String ACTION_NAME=MindSort.getLang().get("M_Menu_C_F_Cl","Cancel");
+		protected final String ACTION_NAME=MindSortUI.getLang().get("M_Menu_C_F_Cl","Cancel");
 		private JDialog dialog;
 	//MAIN
 		protected DialogCancelAction(JDialog dialog){
