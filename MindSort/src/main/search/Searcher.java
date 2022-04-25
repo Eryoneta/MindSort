@@ -23,29 +23,46 @@ public class Searcher{
 		getUI().getWindow().dispose();
 	}
 	public void reset(){
+		matches.clearMatches();
 		getUI().resultado.setText("");
 		getUI().procurar.setText(getUI().procurarTxt);
-		matches.clear();
-		index=0;
 		getUI().procurar.setEnabled(!getUI().termo.getText().isEmpty());
 		getUI().destacar.setEnabled(!getUI().termo.getText().isEmpty());
 	}
-	protected void researchMatch(String newTexto){
-		if(matches.isEmpty()||matches.get(index)==null)return;
-		final Objeto objAtual=matches.get(index).getObjeto();
-		matches.del(objAtual);
-		matches.researchText(objAtual,false,newTexto);
-	}
 //PROCURAR
-	private int index=0;
+	protected void procurar(String termo,boolean isRegex,boolean wholeWord,boolean diffMaiuscMinusc,boolean onlySelected,boolean frente){
+		reset();
+		if(termo.isEmpty()){
+			Toolkit.getDefaultToolkit().beep();
+			return;
+		}
+		matches.search(termo,isRegex,wholeWord,diffMaiuscMinusc,onlySelected);
+		tree.getActions().unSelectAll();
+		for(Objeto obj:matches.getMatchedObjs())tree.select(obj);
+		final int matchesQtd=matches.totalMatches();
+		if(matchesQtd==0){
+			getUI().resultado.setText(MindSortUI.getLang().get("M_Menu_P_P_NE","No encounter!"));
+			Toolkit.getDefaultToolkit().beep();
+		}else if(matchesQtd==1){
+			getUI().resultado.setText(matchesQtd+MindSortUI.getLang().get("M_Menu_P_P_I"," instance found!"));
+			listar(frente);		//HAVENDO APENAS 1 = IMEDIATAMENTE O SELECIONA
+		}else{
+			getUI().resultado.setText(matchesQtd+MindSortUI.getLang().get("M_Menu_P_P_Is"," instances found!"));
+		}
+		getUI().procurar.setText(getUI().listarTxt);	//PROCURAR -> LISTAR
+		tree.getPainel().getJanela().requestFocus();
+		tree.draw();
+	}
+	protected void reProcurar(Objeto obj){
+		if(matches.isEmptyOfMatches())return;
+		matches.researchObjText(obj);
+		matches.nextMatch();
+	}
 	protected void listar(boolean frente){
-		if(!getUI().procurar.getText().equals(getUI().listarTxt)){
-			index+=(frente?+1:-1);
-		}else getUI().procurar.setText(frente?getUI().proximoTxt:getUI().anteriorTxt);	//PROCURAR -> PROX/ANTE
-		if(index<0)index=matches.totaMatches()-1;				//RESETA PARA O FIM
-		if(index>=matches.totaMatches())index=0;				//RESETA PARA O COMEÇO
-		tree.getActions().unSelectAll();						//DESELECIONA TUDO
-		final Match match=matches.get(index);
+		getUI().procurar.setText(frente?getUI().proximoTxt:getUI().anteriorTxt);	//PROCURAR -> PROX/ANTE
+		final Match match=(frente?matches.nextMatch():matches.prevMatch());
+		tree.getActions().unSelectAll();
+		if(match==null)return;
 		if(!tree.getObjetos().contains(match.getObjeto()))return;	//CASO OBJ TENHA SIDO DEL
 		if(match.isOnText()){	//DESTACA TEXTO
 			tree.select(match.getObjeto());
@@ -57,49 +74,28 @@ public class Searcher{
 			tree.getPainel().getJanela().requestFocus();	//FOCA A JANELA
 			tree.getActions().editTitulo();
 			tree.draw();
-			tree.getUI().getTitulo().requestFocus();				//FOCA O TÍTULO
+			tree.getUI().getTitulo().requestFocus();		//FOCA O TÍTULO
 			tree.getUI().getTitulo().select(match.getSelectionStart(),match.getSelectionEnd());
 		}
 	}
-	protected void procurar(String termo,boolean frente,boolean onlySelected,boolean wholeWord,boolean diffMaiuscMinusc){
-		if(termo.isEmpty()){
-			Toolkit.getDefaultToolkit().beep();
-			return;
-		}
-		matches.search(termo,frente,onlySelected,wholeWord,diffMaiuscMinusc);	//PROCURA
-		tree.getActions().unSelectAll();										//DESELECIONA TUDO
-		for(Match match:matches.getMatchs())tree.select(match.getObjeto());		//SELECIONA OS ACHADOS
-		final int size=matches.totaMatches();		//TOTAL DE INSTÂNCIAS ACHADAS
-		if(size==0){
-			getUI().resultado.setText(MindSortUI.getLang().get("M_Menu_P_P_NE","No encounter!"));
-			Toolkit.getDefaultToolkit().beep();
-		}else if(size==1){
-			getUI().resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_P_I"," instance found!"));
-			listar(frente);				//IMEDIATAMENTE O SELECIONA, SENDO APENAS UM
-		}else{
-			getUI().resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_P_Is"," instances found!"));
-		}
-		getUI().procurar.setText(getUI().listarTxt);	//PROCURAR -> LISTAR
-		tree.getPainel().getJanela().requestFocus();
-		tree.draw();
-	}
 //DESTACAR
-	protected void destacar(String termo,boolean onlySelected,boolean wholeWord,boolean diffMaiuscMinusc){
+	protected void destacar(String termo,boolean isRegex,boolean wholeWord,boolean diffMaiuscMinusc,boolean onlySelected){
+		reset();
 		if(termo.isEmpty()){
 			Toolkit.getDefaultToolkit().beep();
 			return;
 		}
-		matches.search(termo,true,onlySelected,wholeWord,diffMaiuscMinusc);		//PROCURA
-		tree.getActions().unSelectAll();										//DESELECIONA TUDO
-		for(Match match:matches.getMatchs())tree.select(match.getObjeto());		//SELECIONA OS ACHADOS
-		final int size=matches.totalObjs();			//TOTAL DE OBJS ACHADOS
-		if(size==0){
+		matches.search(termo,isRegex,wholeWord,diffMaiuscMinusc,onlySelected);
+		tree.getActions().unSelectAll();
+		for(Objeto objs:matches.getMatchedObjs())tree.select(objs);
+		final int matchesQtd=matches.totalMatchedObjs();
+		if(matchesQtd==0){
 			getUI().resultado.setText(MindSortUI.getLang().get("M_Menu_P_D_NR","No results!"));
 			Toolkit.getDefaultToolkit().beep();
-		}else if(size==1){
-			getUI().resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_D_O"," selected object!"));
+		}else if(matchesQtd==1){
+			getUI().resultado.setText(matchesQtd+MindSortUI.getLang().get("M_Menu_P_D_O"," selected object!"));
 		}else{
-			getUI().resultado.setText(size+MindSortUI.getLang().get("M_Menu_P_D_Os"," selected objects!"));
+			getUI().resultado.setText(matchesQtd+MindSortUI.getLang().get("M_Menu_P_D_Os"," selected objects!"));
 		}
 		getUI().procurar.setText(getUI().listarTxt);	//PROCURAR -> LISTAR
 		tree.getPainel().getJanela().requestFocus();

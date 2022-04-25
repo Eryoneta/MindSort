@@ -271,30 +271,30 @@ public class Borda{
 			bufferEdit.fillRect(getInnerX(),0,buffer.getWidth(),buffer.getHeight());	//BORDA
 		//ICONE
 			final boolean isIconified=!getJanela().getIconImages().isEmpty();
+			final int space=5;
+			final int iconSize=16;
 			if(isIconified){
 				final Image icone=getJanela().getIconImages().get(0);
-				bufferEdit.drawImage(icone,SHADOW+5,SHADOW,16,16,null);		//ICONE
+				bufferEdit.drawImage(icone,SHADOW+space,SHADOW,iconSize,iconSize,null);		//ICONE
 			}
 		//TITULO
 			bufferEdit.setColor(janela.isFocused()?Color.WHITE:new Color(160,143,176));
 			bufferEdit.setFont(getFonte());
-			String titulo=((Dialog)janela).getTitle();
-			final int x=SHADOW+5+(isIconified?16+5:0);
+			final StringBuilder titulo=new StringBuilder(((Dialog)janela).getTitle());
+			final int iconWidth=(isIconified?iconSize:0);
+			final int x=getInnerX()+space+iconWidth+space;
 			final int y=3+bufferEdit.getFontMetrics().getHeight();
 			int buttonsWidth=0; 
 			for(Botao botao:botoes)buttonsWidth+=botao.getWidth();
-			final int widthLimite=getInnerWidth()-x-(buttonsWidth+SHADOW)-bufferEdit.getFontMetrics().stringWidth("...");
+			final int widthLimite=getInnerWidth()-(space+iconWidth+space)-bufferEdit.getFontMetrics().stringWidth("...")-space-buttonsWidth;
 			boolean didCut=false;
-			while(bufferEdit.getFontMetrics().stringWidth(titulo)>widthLimite){
-				if(titulo.length()-2<0){
-					titulo="";
-					break;
-				}
-				titulo=titulo.substring(0,titulo.length()-2);
+			while(bufferEdit.getFontMetrics().stringWidth(titulo.toString())>=widthLimite){
+				if(titulo.length()<=0)break;
+				titulo.deleteCharAt(titulo.length()-1);
 				didCut=true;
 			}
-			if(didCut)titulo+="...";
-			bufferEdit.drawString(titulo,x,y);	//TITULO
+			if(didCut)titulo.append("...");
+			bufferEdit.drawString(titulo.toString(),x,y);	//TITULO
 		//BOTÕES
 			for(Botao botao:botoes)botao.draw(bufferEdit);
 			imagemEdit.drawImage(buffer,getInnerX()-WIDTH,0,null);	//PASSA UM RGB PARA O RGBA

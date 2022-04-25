@@ -248,7 +248,7 @@ public class FontChooser extends JComponent{
 			public int getSelectedTamanho(){
 				int fontSize=1;
 				String fontSizeString=getTamanhoTexto().getText();
-				while(true){
+				while(true){	//TODO: PARA QUE SERVE???
 					try{
 						fontSize=Integer.parseInt(fontSizeString);
 						break;
