@@ -7,8 +7,8 @@ import element.tree.main.Tree;
 import element.tree.objeto.Objeto;
 import element.tree.objeto.conexao.Conexao;
 import element.tree.objeto.modulo.Modulo;
-import utilitarios.HashList;
-import utilitarios.ferramenta.regex.RegexBuilder;
+import tool.list_structure.HashList;
+import tool.regex_builder.RegexBuilder;
 public class MatchMade implements RegexBuilder{
 //TREE
 	private Tree tree;

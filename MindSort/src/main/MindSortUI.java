@@ -50,7 +50,8 @@ import main.search.Searcher;
 import menu.Botao;
 import menu.Menu;
 import menu.Toggle;
-import utilitarios.ferramenta.language.LanguagePackage;
+import tool.language_manager.LanguagePackage;
+
 import java.util.Locale;
 import javax.swing.JColorChooser;
 import javax.swing.UIManager;

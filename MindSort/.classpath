@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/utilitarios"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/utilities"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
