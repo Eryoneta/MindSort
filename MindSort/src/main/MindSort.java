@@ -216,7 +216,7 @@ public class MindSort{
 	}
 //.INI
 	public boolean getIniConfig(){
-		final File iniLink=new File(System.getProperty("user.dir")+"/"+ini);
+		final File iniLink=new File(System.getProperty("user.dir")+"/.config/MindSort/"+ini);
 		final JFrame janela=getUI().getJanela();
 		final Janela janelaTexto=getUI().getJanelaTexto();
 		if(iniLink.exists())try{
@@ -292,7 +292,7 @@ public class MindSort{
 		private Cor getCor(String valor){return new Cor(valor);}
 		private boolean getBoolean(String valor){return Boolean.parseBoolean(valor);}
 	public boolean setConfigIni(){
-		final File link=new File(System.getProperty("user.dir")+"/"+ini);
+		final File link=new File(System.getProperty("user.dir")+"/.config/MindSort/"+ini);
 		final JFrame janela=getUI().getJanela();
 		final Janela janelaTexto=getUI().getJanelaTexto();
 		try{
@@ -342,13 +342,13 @@ public class MindSort{
 	}
 //FOLDERS
 	public boolean updateIconFolder(){
-		final File icons=new File(System.getProperty("user.dir")+"/Icons");
+		final File icons=new File(System.getProperty("user.dir")+"/.config/MindSort/Icons");
 		if(!icons.exists())return false;
 		tree.getUI().getPopup().setIconePasta(icons);
 		return true;
 	}
 	public boolean updateLanguageFolder(String idiomaFiltro){
-		final File langs=new File(System.getProperty("user.dir")+"/Languages");
+		final File langs=new File(System.getProperty("user.dir")+"/.config/MindSort/Languages");
 		if(!langs.exists())return false;
 		MindSortUI.addLanguage(langs,idiomaFiltro,"M");
 		TreeUI.addLanguage(langs,idiomaFiltro,"T");
