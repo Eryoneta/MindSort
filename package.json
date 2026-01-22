@@ -1,0 +1,22 @@
+{
+  "name": "mindsort",
+  "version": "2.0.0",
+  "description": "A program that creates and manages mind maps",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@public:Eryoneta/MindSort.git"
+  },
+  "keywords": [
+    "mindmap",
+    "electron"
+  ],
+  "author": "Yo",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^40.0.0"
+  }
+}
