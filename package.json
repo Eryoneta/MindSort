@@ -2,9 +2,15 @@
   "name": "mindsort",
   "version": "2.0.0",
   "description": "A program that creates and manages mind maps",
-  "main": "main.js",
+  "main": "src/core/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-web": "webpack",
+    "build-dsk": "webpack & electron dist/desktop/main.js",
+    "build-mbl": "echo \"No action\" && exit 1",
+    "init-web": "echo \"No action\" && exit 1",
+    "init-dsk": "echo \"No action\" && exit 1",
+    "init-mbl": "echo \"No action\" && exit 1",
+    "test": "echo \"No action\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -17,6 +23,18 @@
   "author": "Yo",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^40.0.0"
+    "@types/node": "^25.5.0",
+    "css-loader": "^7.1.4",
+    "electron": "^40.0.0",
+    "html-webpack-plugin": "^5.6.6",
+    "sass": "^1.98.0",
+    "sass-loader": "^16.0.7",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.3"
   }
 }

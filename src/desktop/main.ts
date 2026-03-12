@@ -10,7 +10,7 @@ function createMainWindow() {
             nodeIntegration: false // Security for plugins
         }
     });
-    mainWindow.loadFile("index.html"); // Load content
+    mainWindow.loadFile("./index.html"); // Load content
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
