@@ -1,2 +1,2 @@
 require("./index.scss");
-require("../core/index");
+require("../core/index.ts");

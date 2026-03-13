@@ -4,12 +4,15 @@
   "description": "A program that creates and manages mind maps",
   "main": "src/core/index.ts",
   "scripts": {
-    "build-web": "webpack",
-    "build-dsk": "webpack & electron dist/desktop/main.js",
+    "build-web": "webpack --config-name web",
+    "build-dsk": "tsc --project src/desktop/tsconfig.desktop.json",
     "build-mbl": "echo \"No action\" && exit 1",
     "init-web": "echo \"No action\" && exit 1",
-    "init-dsk": "echo \"No action\" && exit 1",
+    "init-dsk": "electron build/desktop/main.js",
     "init-mbl": "echo \"No action\" && exit 1",
+    "start-web": "echo \"No action\" && exit 1",
+    "start-dsk": "echo \"No action\" && exit 1",
+    "start-mbl": "echo \"No action\" && exit 1",
     "test": "echo \"No action\" && exit 1"
   },
   "repository": {

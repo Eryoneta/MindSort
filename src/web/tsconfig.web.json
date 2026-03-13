@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    // File Layout
+    "rootDir": "../../src", // Source code
+    "outDir": "../../build", // Compiled code
+
+    // Environment Settings
+    "module": "esnext", // Modern JavaScript for the source code, for browsers
+    "target": "esnext", // Modern JavaScript for the compiled code, for browsers
+    "lib": [
+      "esnext", // Modern JavaScript
+      "dom" // Includes DOM objects
+    ],
+    "types": [
+      "node" // Understands Node code
+    ],
+
+    // Outputs
+    "removeComments": true, // Strips all comments from the code
+    "sourceMap": true, // Generates .map files, which map to the source code
+    "declaration": true, // Generates .d.ts files, which define the type for each variable
+    "declarationMap": true, // Generates a source map for declarations
+
+    // Stricter
+    "strict": true,
+    "noUncheckedIndexedAccess": true, // Any undeclared field gets undefined or its type, when declared
+    "exactOptionalPropertyTypes": true, // Optional variables should only either hava a value or not be declared
+    "noImplicitReturns": true, // All functions should have a return
+    "noImplicitOverride": true, // All overrides should be explicit
+
+    // Recommended Options
+    "verbatimModuleSyntax": true, // Imports are not bundled, and remain as imports, unless the type modifier is used
+    "noUncheckedSideEffectImports": true, // Imported modules must exist
+    "moduleDetection": "force", // Every file is treated as a module
+    "skipLibCheck": true, // Saves time during compilation, at expense of type-system accuracy
+  },
+}
