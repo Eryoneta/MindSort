@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    // Environment Settings
+    "module": "esnext", // Modern JavaScript for the source code, for browsers
+    "target": "esnext", // Modern JavaScript for the compiled code, for browsers
+    "lib": [
+      "esnext", // Modern JavaScript
+      "dom" // Includes DOM objects
+    ],
+    "types": [
+      "node" // Understands Node code
+    ],
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "src/desktop", // Ignore web domain
+    "src/mobile", // Ignore mobile domain
+  ],
+  "extends": "./tsconfig.json" // Common settings
+}

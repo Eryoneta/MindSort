@@ -2,9 +2,11 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const webInput = "./src/web";
-const webOutput = "build/web";
+const webOutput = "./build/web";
 const dskInput = "./src/desktop";
-const dskOutput = "build/desktop";
+const dskOutput = "./build/desktop";
+const mblInput = "./src/desktop";
+const mblOutput = "./build/desktop";
 
 module.exports = [
    {
@@ -18,7 +20,7 @@ module.exports = [
          clean: true, // Clears the directory before emit
       },
       resolve: {
-         tsconfig: "src/web/tsconfig.web.json",
+         tsconfig: path.resolve(__dirname, "tsconfig.web.json")
       },
       plugins: [
       new HtmlWebpackPlugin({
@@ -32,12 +34,9 @@ module.exports = [
                use: [{
                   loader: "ts-loader", // Compiles into .js files
                   options: {
-                     configFile: "tsconfig.web.json"
+                     configFile: path.resolve(__dirname, "tsconfig.web.json")
                   }
                }],
-               include: [
-                  path.resolve(__dirname, webInput),
-               ],
             },
             {
                test: /\.scss$/, // Target .scss files
@@ -45,9 +44,6 @@ module.exports = [
                   "style-loader", // Injects styles into the DOM with <style> tags
                   "css-loader", // Resolves css imports
                   "sass-loader", // Compiles into .css files
-               ],
-               include: [
-                  path.resolve(__dirname, webInput),
                ],
             },
             {
@@ -65,19 +61,20 @@ module.exports = [
    {
       name: "desktop",
       mode: "production", // Optimizated for production code
-      entry: `${dskInput}/main.ts`,
+      entry: `${dskInput}/renderer.ts`,
       output: {
-         filename: "bundle.js",
+         filename: "renderer.js",
          path: path.resolve(__dirname, dskOutput), // The output path
          compareBeforeEmit: false, // Write only when the source file is modified
          clean: true, // Clears the directory before emit
       },
       resolve: {
-         tsconfig: "src/desktop/tsconfig.desktop.json",
+         tsconfig: path.resolve(__dirname, "tsconfig.desktop.dom.json")
       },
       plugins: [
       new HtmlWebpackPlugin({
-         template: `${dskInput}/index.html`,
+         template: `${dskInput}/renderer.html`,
+         filename: "renderer.html"
       })
       ],
       module: {
@@ -87,12 +84,9 @@ module.exports = [
                use: [{
                   loader: "ts-loader", // Compiles into .js files
                   options: {
-                     configFile: "tsconfig.desktop.json"
+                     configFile: path.resolve(__dirname, "tsconfig.desktop.dom.json")
                   }
                }],
-               include: [
-                  path.resolve(__dirname, dskInput),
-               ],
             },
             {
                test: /\.scss$/, // Target .scss files
@@ -101,20 +95,12 @@ module.exports = [
                   "css-loader", // Resolves css imports
                   "sass-loader", // Compiles into .css files
                ],
-               include: [
-                  path.resolve(__dirname, dskInput),
-               ],
             },
             {
                test: /\.(png|jpe?g|gif|svg)$/, // Target image files
                type: "asset/resource", // Handles as resources
             }
          ],
-      },
-      devServer: {
-         static: path.resolve(__dirname, dskOutput),
-         port: 3000,
-         open: true,
-      },
+      }
    }
 ];

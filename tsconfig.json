@@ -1,19 +1,9 @@
 {
+  // Common settings
   "compilerOptions": {
     // File Layout
-    "rootDir": "../../src", // Source code
-    "outDir": "../../build", // Compiled code
-
-    // Environment Settings
-    "module": "nodenext", // Modern JavaScript for the source code, for browsers
-    "target": "esnext", // Modern JavaScript for the compiled code, for browsers
-    "lib": [
-      "esnext", // Modern JavaScript
-      "dom" // Includes DOM objects
-    ],
-    "types": [
-      "node" // Understands Node code
-    ],
+    "rootDir": "src", // Source code
+    "outDir": "build", // Compiled code
 
     // Outputs
     "removeComments": true, // Strips all comments from the code
@@ -29,7 +19,7 @@
     "noImplicitOverride": true, // All overrides should be explicit
 
     // Recommended Options
-    "verbatimModuleSyntax": false, // Imports are not bundled, and remain as imports, unless the type modifier is used
+    "verbatimModuleSyntax": true, // Imports are not bundled, and remain as imports, unless the type modifier is used
     "noUncheckedSideEffectImports": true, // Imported modules must exist
     "moduleDetection": "force", // Every file is treated as a module
     "skipLibCheck": true, // Saves time during compilation, at expense of type-system accuracy

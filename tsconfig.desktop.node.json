@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    // Environment Settings
+    "module": "nodenext", // Modern JavaScript for the source code, for browsers
+    "moduleResolution": "nodenext",
+    "target": "esnext", // Modern JavaScript for the compiled code, for browsers
+    "lib": [
+      "esnext", // Modern JavaScript
+      "dom" // Includes DOM objects
+    ],
+    "types": [
+      "node" // Understands Node code
+    ],
+
+    // Recommended Options
+    "verbatimModuleSyntax": false, // Imports can be inferred
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "src/web", // Ignore web domain
+    "src/mobile", // Ignore mobile domain
+    "src/desktop/renderer.ts", // Ignore dom file
+  ],
+  "extends": "./tsconfig.json" // Common settings
+}

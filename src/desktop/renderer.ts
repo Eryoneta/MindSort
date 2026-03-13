@@ -1,1 +1,2 @@
-import "../core/index.js";
+require("./renderer.scss");
+require("../core/index.ts");
